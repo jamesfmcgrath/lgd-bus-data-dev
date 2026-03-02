@@ -8,7 +8,6 @@ use Drupal\bus_times\Service\BodsApiClient;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\key\KeyRepositoryInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -18,12 +17,18 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 final class SettingsForm extends ConfigFormBase {
 
+  // Must be protected, not private: DependencySerializationTrait::__sleep() runs
+  // in FormBase's scope (where the trait is declared), so get_object_vars() only
+  // sees public/protected properties. The trait uses ReverseContainer to detect
+  // the service ID automatically; __wakeup() then reinjects it.
+  protected BodsApiClient $apiClient;
+
   public function __construct(
     ConfigFactoryInterface $configFactory,
-    private readonly KeyRepositoryInterface $keyRepository,
-    private readonly BodsApiClient $apiClient,
+    BodsApiClient $apiClient,
   ) {
     parent::__construct($configFactory);
+    $this->apiClient = $apiClient;
   }
 
   /**
@@ -32,7 +37,6 @@ final class SettingsForm extends ConfigFormBase {
   public static function create(ContainerInterface $container): static {
     return new static(
       $container->get('config.factory'),
-      $container->get('key.repository'),
       $container->get('bus_times.bods_api_client'),
     );
   }
@@ -159,22 +163,6 @@ final class SettingsForm extends ConfigFormBase {
       '#limit_validation_errors' => [],
     ];
 
-    // Show result from a previous AJAX call if present.
-    if ($form_state->has('connection_test_result')) {
-      $result = $form_state->get('connection_test_result');
-      $form['source']['connection_test']['result'] = [
-        '#type' => 'container',
-        '#attributes' => [
-          'class' => $result['success']
-            ? ['messages', 'messages--status']
-            : ['messages', 'messages--error'],
-          'role' => 'alert',
-        ],
-        'message' => [
-          '#plain_text' => $result['message'],
-        ],
-      ];
-    }
 
     $form['import'] = [
       '#type' => 'details',
@@ -254,8 +242,20 @@ final class SettingsForm extends ConfigFormBase {
    */
   public function ajaxTestConnection(array &$form, FormStateInterface $form_state): array {
     $result = $this->apiClient->testConnection();
-    $form_state->set('connection_test_result', $result);
-    $form_state->setRebuild(TRUE);
+
+    $form['source']['connection_test']['result'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'class' => $result['success']
+          ? ['messages', 'messages--status']
+          : ['messages', 'messages--error'],
+        'role' => 'alert',
+      ],
+      'message' => [
+        '#plain_text' => $result['message'],
+      ],
+    ];
+
     return $form['source']['connection_test'];
   }
 
