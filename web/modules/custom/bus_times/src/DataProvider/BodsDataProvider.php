@@ -36,13 +36,11 @@ final class BodsDataProvider implements DataProviderInterface {
   /**
    * {@inheritdoc}
    */
-  public function getGtfsDownloadUrl(string $adminArea = ''): string {
-    // listDatasets() expects an array; wrap the single code, or pass empty
-    // array to fetch all areas if no code is given.
-    $areaCodes = $adminArea !== '' ? [$adminArea] : [];
-    $datasets = $this->apiClient->listDatasets($areaCodes, 1);
+  public function getGtfsDownloadUrl(array $adminAreaCodes = []): string {
+    $datasets = $this->apiClient->listDatasets($adminAreaCodes, 1);
     if (empty($datasets)) {
-      throw new \RuntimeException("No GTFS datasets found for admin area '{$adminArea}'.");
+      $codes = implode(', ', $adminAreaCodes) ?: '(all areas)';
+      throw new \RuntimeException("No GTFS datasets found for area codes: {$codes}.");
     }
     $datasetId = (int) ($datasets[0]['id'] ?? 0);
     if ($datasetId === 0) {

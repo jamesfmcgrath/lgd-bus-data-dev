@@ -295,6 +295,24 @@ final class SettingsForm extends ConfigFormBase {
         'The import schedule must be a valid 5-field cron expression (e.g. <code>0 3 * * *</code>).',
       ));
     }
+
+    // Validate bounding box orientation: north must exceed south, east > west.
+    $north = (float) $form_state->getValue('bbox_north');
+    $south = (float) $form_state->getValue('bbox_south');
+    $east  = (float) $form_state->getValue('bbox_east');
+    $west  = (float) $form_state->getValue('bbox_west');
+    if ($north <= $south) {
+      $form_state->setErrorByName('bbox_north', $this->t(
+        'North latitude (@n°) must be greater than South latitude (@s°).',
+        ['@n' => $north, '@s' => $south],
+      ));
+    }
+    if ($east <= $west) {
+      $form_state->setErrorByName('bbox_east', $this->t(
+        'East longitude (@e°) must be greater than West longitude (@w°).',
+        ['@e' => $east, '@w' => $west],
+      ));
+    }
   }
 
   /**

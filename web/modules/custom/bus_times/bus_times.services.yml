@@ -7,6 +7,11 @@ services:
       - '@key.repository'
       - '@logger.channel.bus_times'
 
+  bus_times.data_provider.bods:
+    class: Drupal\bus_times\DataProvider\BodsDataProvider
+    arguments:
+      - '@bus_times.bods_api_client'
+
   bus_times.gtfs_filter:
     class: Drupal\bus_times\Service\GtfsFilter
     arguments:
