@@ -8,6 +8,7 @@ use Drupal\bus_times\Service\BodsApiClient;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -79,10 +80,14 @@ final class SettingsForm extends ConfigFormBase {
       '#default_value' => $config->get('source.label') ?? '',
     ];
 
+    $keysUrl = Url::fromRoute('entity.key.collection')->toString();
     $form['source']['api_key_id'] = [
       '#type' => 'key_select',
       '#title' => $this->t('API key'),
-      '#description' => $this->t('Select the Key entity that holds your BODS API key. Create keys at <a href="/admin/config/system/keys">Configuration → System → Keys</a>.'),
+      '#description' => $this->t(
+        'Select the Key entity that holds your BODS API key. Create keys at <a href="@url">Configuration → System → Keys</a>. Note: "Test connection" uses the <strong>saved</strong> key, not any unsaved change made here.',
+        ['@url' => $keysUrl],
+      ),
       '#default_value' => $config->get('source.api_key_id') ?? '',
       '#empty_option' => $this->t('- Select a key -'),
       '#required' => FALSE,

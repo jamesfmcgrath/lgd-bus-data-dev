@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\bus_times\Plugin\DataProvider;
+namespace Drupal\bus_times\DataProvider;
 
 use Drupal\bus_times\Service\BodsApiClient;
 
