@@ -88,3 +88,12 @@
 /drupal-agent-resources/
 .cursor/
 CLAUDE.md
+.claude/
+.claire/
+.cursorrules
+
+# Ignore markdown files (working docs, specs, notes) — README files are kept
+*.md
+!README.md
+!README.*.md
+/web/README.md
