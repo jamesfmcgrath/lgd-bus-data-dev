@@ -25,6 +25,9 @@
   </php>
 
   <testsuites>
+    <testsuite name="custom">
+      <directory>web/modules/custom</directory>
+    </testsuite>
     <testsuite name="profile">
       <directory>web/profiles/contrib/localgov</directory>
     </testsuite>
