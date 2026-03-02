@@ -20,24 +20,18 @@ use Psr\Log\LoggerInterface;
  */
 final class BodsApiClient {
 
-  private string $baseUrl;
-  private string $apiKeyId;
-
   public function __construct(
     private readonly ClientInterface $httpClient,
     private readonly ConfigFactoryInterface $configFactory,
     private readonly KeyRepositoryInterface $keyRepository,
     private readonly LoggerInterface $logger,
-  ) {
-    $config = $this->configFactory->get('bus_times.settings');
-    $this->baseUrl = rtrim((string) ($config->get('source.base_url') ?? 'https://data.bus-data.dft.gov.uk/api/v1'), '/');
-    $this->apiKeyId = (string) ($config->get('source.api_key_id') ?? '');
-  }
+  ) {}
 
   /**
    * Tests that the API key is valid by fetching a single dataset record.
    *
-   * @return array{success: bool, message: string}
+   * @return array
+   *   Array with 'success' (bool) and 'message' (string) keys.
    */
   public function testConnection(): array {
     $apiKey = $this->resolveApiKey();
@@ -46,7 +40,7 @@ final class BodsApiClient {
     }
 
     try {
-      $response = $this->httpClient->request('GET', $this->baseUrl . '/dataset/', [
+      $response = $this->httpClient->request('GET', $this->baseUrl() . '/dataset/', [
         'query' => ['api_key' => $apiKey, 'limit' => 1],
         'timeout' => 10,
       ]);
@@ -80,7 +74,8 @@ final class BodsApiClient {
    *
    * @param array<int, string> $adminAreaCodes
    *   NaPTAN admin area codes to filter by (e.g. ['080', '081', '082']).
-   *   Pass an empty array to retrieve all areas (not recommended in production).
+   *   Pass an empty array to retrieve all areas (not recommended in
+   *   production).
    * @param int $limit
    *   Maximum number of results per page.
    * @param int $offset
@@ -167,6 +162,7 @@ final class BodsApiClient {
    *   Query parameters (api_key will be added if not present).
    *
    * @return array<string, mixed>
+   *   Decoded JSON response body.
    *
    * @throws \RuntimeException
    */
@@ -176,7 +172,7 @@ final class BodsApiClient {
     }
 
     try {
-      $response = $this->httpClient->request($method, $this->baseUrl . $path, [
+      $response = $this->httpClient->request($method, $this->baseUrl() . $path, [
         'query'   => $query,
         'timeout' => (int) ($this->configFactory->get('bus_times.settings')->get('import.timeout') ?? 30),
       ]);
@@ -199,8 +195,10 @@ final class BodsApiClient {
   }
 
   /**
-   * Makes a GET request using a pre-built URL (path + query string) and
-   * returns decoded JSON. Use when repeated query params are required.
+   * Makes a GET request using a pre-built URL and returns decoded JSON.
+   *
+   * Use when repeated query params are required, as Guzzle's 'query' option
+   * converts repeated keys to array notation (e.g. adminArea[0]=).
    *
    * @param string $method
    *   HTTP method.
@@ -208,12 +206,13 @@ final class BodsApiClient {
    *   Full path including pre-built query string (e.g. '/dataset/?foo=bar').
    *
    * @return array<string, mixed>
+   *   Decoded JSON response body.
    *
    * @throws \RuntimeException
    */
   private function requestRaw(string $method, string $urlWithQuery): array {
     try {
-      $response = $this->httpClient->request($method, $this->baseUrl . $urlWithQuery, [
+      $response = $this->httpClient->request($method, $this->baseUrl() . $urlWithQuery, [
         'timeout' => (int) ($this->configFactory->get('bus_times.settings')->get('import.timeout') ?? 30),
       ]);
 
@@ -234,18 +233,30 @@ final class BodsApiClient {
   }
 
   /**
+   * Returns the configured BODS API base URL with trailing slash stripped.
+   *
+   * @return string
+   *   The base URL read fresh from config on every call.
+   */
+  private function baseUrl(): string {
+    $url = (string) ($this->configFactory->get('bus_times.settings')->get('source.base_url') ?? 'https://data.bus-data.dft.gov.uk/api/v1');
+    return rtrim($url, '/');
+  }
+
+  /**
    * Resolves the API key value from the configured Key entity.
    *
    * @return string
    *   The raw API key string, or empty string if not configured.
    */
   private function resolveApiKey(): string {
-    if ($this->apiKeyId === '') {
+    $apiKeyId = (string) ($this->configFactory->get('bus_times.settings')->get('source.api_key_id') ?? '');
+    if ($apiKeyId === '') {
       return '';
     }
-    $key = $this->keyRepository->getKey($this->apiKeyId);
+    $key = $this->keyRepository->getKey($apiKeyId);
     if ($key === NULL) {
-      $this->logger->warning('Bus Times: Key entity "@id" not found.', ['@id' => $this->apiKeyId]);
+      $this->logger->warning('Bus Times: Key entity "@id" not found.', ['@id' => $apiKeyId]);
       return '';
     }
     return (string) ($key->getKeyValue() ?? '');

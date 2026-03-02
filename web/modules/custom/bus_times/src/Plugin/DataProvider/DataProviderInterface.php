@@ -20,7 +20,8 @@ interface DataProviderInterface {
   /**
    * Verifies the provider is reachable and the credentials are valid.
    *
-   * @return array{success: bool, message: string}
+   * @return array
+   *   Array with 'success' (bool) and 'message' (string) keys.
    */
   public function testConnection(): array;
 

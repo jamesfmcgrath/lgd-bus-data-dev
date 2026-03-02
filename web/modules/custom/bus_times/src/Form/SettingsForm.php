@@ -17,10 +17,15 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 final class SettingsForm extends ConfigFormBase {
 
-  // Must be protected, not private: DependencySerializationTrait::__sleep() runs
-  // in FormBase's scope (where the trait is declared), so get_object_vars() only
-  // sees public/protected properties. The trait uses ReverseContainer to detect
-  // the service ID automatically; __wakeup() then reinjects it.
+  /**
+   * The BODS API client.
+   *
+   * Must be protected (not private): DependencySerializationTrait::__sleep()
+   * runs in FormBase's scope, so get_object_vars() cannot see private child
+   * properties. ReverseContainer detects the service ID; __wakeup() reinjects.
+   *
+   * @var \Drupal\bus_times\Service\BodsApiClient
+   */
   protected BodsApiClient $apiClient;
 
   public function __construct(
@@ -163,7 +168,6 @@ final class SettingsForm extends ConfigFormBase {
       '#limit_validation_errors' => [],
     ];
 
-
     $form['import'] = [
       '#type' => 'details',
       '#title' => $this->t('Import settings'),
@@ -257,6 +261,35 @@ final class SettingsForm extends ConfigFormBase {
     ];
 
     return $form['source']['connection_test'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateForm(array &$form, FormStateInterface $form_state): void {
+    parent::validateForm($form, $form_state);
+
+    // Validate NaPTAN admin area codes: must be comma-separated 3-digit codes.
+    $codes = trim((string) $form_state->getValue('admin_area_codes'));
+    if ($codes !== '') {
+      foreach (explode(',', $codes) as $code) {
+        if (!preg_match('/^\d{3}$/', trim($code))) {
+          $form_state->setErrorByName('admin_area_codes', $this->t(
+            'Each NaPTAN admin area code must be a 3-digit number (e.g. <code>080,081,082</code>). Invalid value: <em>@code</em>.',
+            ['@code' => trim($code)],
+          ));
+          break;
+        }
+      }
+    }
+
+    // Validate cron expression: must be exactly 5 whitespace-separated fields.
+    $schedule = trim((string) $form_state->getValue('schedule'));
+    if ($schedule !== '' && !preg_match('/^(\S+\s+){4}\S+$/', $schedule)) {
+      $form_state->setErrorByName('schedule', $this->t(
+        'The import schedule must be a valid 5-field cron expression (e.g. <code>0 3 * * *</code>).',
+      ));
+    }
   }
 
   /**

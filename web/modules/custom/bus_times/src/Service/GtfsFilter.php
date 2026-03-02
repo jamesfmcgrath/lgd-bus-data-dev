@@ -22,7 +22,7 @@ use Psr\Log\LoggerInterface;
  * Processing order:
  *   1. Scan stops.txt       → collect in-box stop IDs (read-only)
  *   2. Scan stop_times.txt  → collect trip IDs with ≥1 in-box stop (read-only)
- *   3. Rewrite stop_times.txt keeping valid trips; collect all stop IDs they use
+ *   3. Rewrite stop_times.txt keeping valid trips; collect all stop IDs used
  *   4. Rewrite stops.txt    keeping all stops referenced by valid trips
  *   5. Rewrite trips.txt    keeping valid trips
  *
@@ -250,8 +250,8 @@ final class GtfsFilter {
    *
    * @param string $file
    *   Absolute path to the CSV file.
-   * @param callable(array<int, string> $header, array<int, string> $row): void $cb
-   *   Called for every data row.
+   * @param callable $cb
+   *   Callback invoked for every data row with (array $header, array $row).
    */
   private function scanCsv(string $file, callable $cb): void {
     if (!file_exists($file)) {
@@ -281,18 +281,24 @@ final class GtfsFilter {
    *
    * @param string $file
    *   Absolute path to the CSV file.
-   * @param callable(array<int, string> $header, array<int, string> $row): bool $keep
-   *   Return TRUE to keep a data row, FALSE to discard it.
+   * @param callable $keep
+   *   Callback with (array $header, array $row): bool. Return TRUE to keep.
    */
   private function rewriteCsv(string $file, callable $keep): void {
     if (!file_exists($file)) {
       return;
     }
     $tmpFile = $file . '.tmp';
-    $in  = fopen($file, 'r');
+    $in = fopen($file, 'r');
     $out = fopen($tmpFile, 'w');
 
     if ($in === FALSE || $out === FALSE) {
+      if ($in !== FALSE) {
+        fclose($in);
+      }
+      if ($out !== FALSE) {
+        fclose($out);
+      }
       $this->logger->error('GtfsFilter: could not open @file for rewriting.', ['@file' => $file]);
       return;
     }
