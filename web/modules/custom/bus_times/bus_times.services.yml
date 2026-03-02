@@ -7,6 +7,12 @@ services:
       - '@key.repository'
       - '@logger.channel.bus_times'
 
+  bus_times.gtfs_filter:
+    class: Drupal\bus_times\Service\GtfsFilter
+    arguments:
+      - '@config.factory'
+      - '@logger.channel.bus_times'
+
   logger.channel.bus_times:
     parent: logger.channel_base
     arguments: ['bus_times']

@@ -1,0 +1,28 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * @file
+ * Install, update, and uninstall functions for the Bus Times module.
+ */
+
+/**
+ * Migrate admin_area to admin_area_codes and add bounding_box defaults.
+ */
+function bus_times_update_10001(): void {
+  $config = \Drupal::configFactory()->getEditable('bus_times.settings');
+
+  // Carry forward any existing value; default to Cumberland's NaPTAN codes.
+  $existing = (string) ($config->get('source.admin_area') ?? '');
+  $config
+    ->set('source.admin_area_codes', $existing !== '' ? $existing : '080,081,082')
+    ->clear('source.admin_area')
+    ->set('source.bounding_box', [
+      'north' => 55.10,
+      'south' => 54.30,
+      'east'  => -2.00,
+      'west'  => -3.75,
+    ])
+    ->save();
+}

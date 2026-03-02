@@ -87,12 +87,53 @@ final class SettingsForm extends ConfigFormBase {
       '#required' => TRUE,
     ];
 
-    $form['source']['admin_area'] = [
+    $form['source']['admin_area_codes'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('ATCO admin area code'),
-      '#description' => $this->t('Filter GTFS data to a single admin area (e.g. <code>099</code> for Cumberland). Leave empty to import all areas (not recommended).'),
-      '#default_value' => $config->get('source.admin_area') ?? '',
-      '#maxlength' => 10,
+      '#title' => $this->t('NaPTAN admin area codes'),
+      '#description' => $this->t('Comma-separated NaPTAN codes to filter which BODS datasets are fetched. Cumberland defaults: <code>080,081,082</code> (Copeland, Allerdale, Carlisle). Leave empty to import all areas — not recommended.'),
+      '#default_value' => $config->get('source.admin_area_codes') ?? '080,081,082',
+      '#maxlength' => 100,
+      '#placeholder' => '080,081,082',
+    ];
+
+    $bbox = $config->get('source.bounding_box') ?? [];
+    $form['source']['bounding_box'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Geographic bounding box'),
+      '#description' => $this->t('Stops outside this box are discarded after download. Trips and stop times that no longer serve any in-box stop are also removed.'),
+      '#open' => TRUE,
+    ];
+    $form['source']['bounding_box']['bbox_north'] = [
+      '#type' => 'number',
+      '#title' => $this->t('North latitude'),
+      '#default_value' => $bbox['north'] ?? 55.10,
+      '#step' => 0.01,
+      '#min' => -90,
+      '#max' => 90,
+    ];
+    $form['source']['bounding_box']['bbox_south'] = [
+      '#type' => 'number',
+      '#title' => $this->t('South latitude'),
+      '#default_value' => $bbox['south'] ?? 54.30,
+      '#step' => 0.01,
+      '#min' => -90,
+      '#max' => 90,
+    ];
+    $form['source']['bounding_box']['bbox_east'] = [
+      '#type' => 'number',
+      '#title' => $this->t('East longitude'),
+      '#default_value' => $bbox['east'] ?? -2.00,
+      '#step' => 0.01,
+      '#min' => -180,
+      '#max' => 180,
+    ];
+    $form['source']['bounding_box']['bbox_west'] = [
+      '#type' => 'number',
+      '#title' => $this->t('West longitude'),
+      '#default_value' => $bbox['west'] ?? -3.75,
+      '#step' => 0.01,
+      '#min' => -180,
+      '#max' => 180,
     ];
 
     $form['source']['enabled'] = [
@@ -226,7 +267,13 @@ final class SettingsForm extends ConfigFormBase {
       ->set('source.label', $form_state->getValue('label'))
       ->set('source.api_key_id', $form_state->getValue('api_key_id'))
       ->set('source.base_url', rtrim((string) $form_state->getValue('base_url'), '/'))
-      ->set('source.admin_area', trim((string) $form_state->getValue('admin_area')))
+      ->set('source.admin_area_codes', trim((string) $form_state->getValue('admin_area_codes')))
+      ->set('source.bounding_box', [
+        'north' => (float) $form_state->getValue('bbox_north'),
+        'south' => (float) $form_state->getValue('bbox_south'),
+        'east'  => (float) $form_state->getValue('bbox_east'),
+        'west'  => (float) $form_state->getValue('bbox_west'),
+      ])
       ->set('source.schedule', trim((string) $form_state->getValue('schedule')))
       ->set('source.enabled', (bool) $form_state->getValue('enabled'))
       ->set('import.batch_size', (int) $form_state->getValue('batch_size'))

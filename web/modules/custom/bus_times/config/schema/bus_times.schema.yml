@@ -15,9 +15,25 @@ bus_times.settings:
         base_url:
           type: string
           label: 'BODS API base URL'
-        admin_area:
+        admin_area_codes:
           type: string
-          label: 'ATCO admin area code'
+          label: 'NaPTAN admin area codes (comma-separated)'
+        bounding_box:
+          type: mapping
+          label: 'Geographic bounding box'
+          mapping:
+            north:
+              type: float
+              label: 'North latitude'
+            south:
+              type: float
+              label: 'South latitude'
+            east:
+              type: float
+              label: 'East longitude'
+            west:
+              type: float
+              label: 'West longitude'
         schedule:
           type: string
           label: 'Import cron schedule'

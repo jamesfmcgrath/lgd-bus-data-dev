@@ -68,11 +68,15 @@ final class BodsApiClient {
   }
 
   /**
-   * Lists available GTFS timetable datasets, optionally filtered by area.
+   * Lists available GTFS timetable datasets, filtered to configured areas.
    *
-   * @param string $adminArea
-   *   ATCO admin area code (e.g. '099' for Cumberland). Pass empty string
-   *   to retrieve all areas.
+   * Multiple NaPTAN admin area codes are sent as repeated query parameters
+   * (e.g. ?adminArea=080&adminArea=081) so BODS returns only datasets that
+   * contain stops in at least one of those areas.
+   *
+   * @param array<int, string> $adminAreaCodes
+   *   NaPTAN admin area codes to filter by (e.g. ['080', '081', '082']).
+   *   Pass an empty array to retrieve all areas (not recommended in production).
    * @param int $limit
    *   Maximum number of results per page.
    * @param int $offset
@@ -83,18 +87,26 @@ final class BodsApiClient {
    *
    * @throws \RuntimeException
    */
-  public function listDatasets(string $adminArea = '', int $limit = 25, int $offset = 0): array {
-    $query = [
+  public function listDatasets(array $adminAreaCodes = [], int $limit = 25, int $offset = 0): array {
+    // Build the query string manually so repeated adminArea= params are not
+    // converted to adminArea[0]= by http_build_query.
+    $base = http_build_query([
       'api_key' => $this->resolveApiKey(),
-      'limit' => $limit,
-      'offset' => $offset,
-    ];
-    if ($adminArea !== '') {
-      $query['adminArea'] = $adminArea;
-    }
+      'limit'   => $limit,
+      'offset'  => $offset,
+    ]);
 
-    $response = $this->request('GET', '/dataset/', $query);
-    return $response['results'] ?? [];
+    $areaParts = array_map(
+      static fn(string $code) => 'adminArea=' . rawurlencode(trim($code)),
+      array_filter($adminAreaCodes),
+    );
+
+    $queryString = $areaParts !== []
+      ? $base . '&' . implode('&', $areaParts)
+      : $base;
+
+    $decoded = $this->requestRaw('GET', '/dataset/?' . $queryString);
+    return $decoded['results'] ?? [];
   }
 
   /**
@@ -139,7 +151,9 @@ final class BodsApiClient {
   }
 
   /**
-   * Makes an authenticated GET request and returns the decoded JSON body.
+   * Makes a GET request with standard query array and returns decoded JSON.
+   *
+   * Use this for endpoints that don't need repeated query params.
    *
    * @param string $method
    *   HTTP method.
@@ -159,7 +173,7 @@ final class BodsApiClient {
 
     try {
       $response = $this->httpClient->request($method, $this->baseUrl . $path, [
-        'query' => $query,
+        'query'   => $query,
         'timeout' => (int) ($this->configFactory->get('bus_times.settings')->get('import.timeout') ?? 30),
       ]);
 
@@ -172,6 +186,40 @@ final class BodsApiClient {
     catch (GuzzleException $e) {
       $this->logger->error('BODS API request to @path failed: @message', [
         '@path' => $path,
+        '@message' => $e->getMessage(),
+      ]);
+      throw new \RuntimeException('BODS API request failed: ' . $e->getMessage(), 0, $e);
+    }
+  }
+
+  /**
+   * Makes a GET request using a pre-built URL (path + query string) and
+   * returns decoded JSON. Use when repeated query params are required.
+   *
+   * @param string $method
+   *   HTTP method.
+   * @param string $urlWithQuery
+   *   Full path including pre-built query string (e.g. '/dataset/?foo=bar').
+   *
+   * @return array<string, mixed>
+   *
+   * @throws \RuntimeException
+   */
+  private function requestRaw(string $method, string $urlWithQuery): array {
+    try {
+      $response = $this->httpClient->request($method, $this->baseUrl . $urlWithQuery, [
+        'timeout' => (int) ($this->configFactory->get('bus_times.settings')->get('import.timeout') ?? 30),
+      ]);
+
+      $decoded = json_decode((string) $response->getBody(), TRUE);
+      if (!is_array($decoded)) {
+        throw new \RuntimeException('BODS API returned non-JSON response.');
+      }
+      return $decoded;
+    }
+    catch (GuzzleException $e) {
+      $this->logger->error('BODS API request to @path failed: @message', [
+        '@path' => $urlWithQuery,
         '@message' => $e->getMessage(),
       ]);
       throw new \RuntimeException('BODS API request failed: ' . $e->getMessage(), 0, $e);
