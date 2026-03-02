@@ -28,12 +28,14 @@ interface DataProviderInterface {
    * Returns the URL of the GTFS ZIP file to download.
    *
    * @param string $adminArea
-   *   ATCO area code to filter by (e.g. '099' for Cumberland).
+   *   NaPTAN admin area code to filter by (e.g. '080' for Copeland).
+   *   Pass an empty string to fetch all areas (not recommended in production).
    *
    * @return string
    *   Absolute URL of the GTFS ZIP.
    *
-   * @throws \Drupal\bus_times\Exception\DataProviderException
+   * @throws \RuntimeException
+   *   When no datasets are found or the provider is unreachable.
    */
   public function getGtfsDownloadUrl(string $adminArea = ''): string;
 

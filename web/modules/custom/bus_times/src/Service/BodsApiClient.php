@@ -62,8 +62,12 @@ final class BodsApiClient {
       return ['success' => FALSE, 'message' => "Unexpected HTTP {$statusCode} from BODS API."];
     }
     catch (GuzzleException $e) {
-      $this->logger->error('BODS API connection test failed: @message', ['@message' => $e->getMessage()]);
-      return ['success' => FALSE, 'message' => 'Connection failed: ' . $e->getMessage()];
+      // Do not log $e->getMessage() — Guzzle includes the full request URL,
+      // which contains the api_key query parameter in plain text.
+      $this->logger->error('BODS API connection test failed (@type).', [
+        '@type' => get_class($e),
+      ]);
+      return ['success' => FALSE, 'message' => 'Connection failed. Check the site logs for details.'];
     }
   }
 
@@ -184,11 +188,13 @@ final class BodsApiClient {
       return $decoded;
     }
     catch (GuzzleException $e) {
-      $this->logger->error('BODS API request to @path failed: @message', [
+      // Do not use $e->getMessage() — it contains the full request URL
+      // including the api_key query parameter.
+      $this->logger->error('BODS API request to @path failed (@type).', [
         '@path' => $path,
-        '@message' => $e->getMessage(),
+        '@type' => get_class($e),
       ]);
-      throw new \RuntimeException('BODS API request failed: ' . $e->getMessage(), 0, $e);
+      throw new \RuntimeException("BODS API request to {$path} failed.", 0, $e);
     }
   }
 
@@ -218,11 +224,12 @@ final class BodsApiClient {
       return $decoded;
     }
     catch (GuzzleException $e) {
-      $this->logger->error('BODS API request to @path failed: @message', [
-        '@path' => $urlWithQuery,
-        '@message' => $e->getMessage(),
+      // Do not use $e->getMessage() — it contains the full request URL
+      // including the api_key query parameter.
+      $this->logger->error('BODS API request failed (@type).', [
+        '@type' => get_class($e),
       ]);
-      throw new \RuntimeException('BODS API request failed: ' . $e->getMessage(), 0, $e);
+      throw new \RuntimeException('BODS API request failed.', 0, $e);
     }
   }
 
