@@ -1,0 +1,8 @@
+bus_times.settings:
+  path: '/admin/config/bus-times/settings'
+  defaults:
+    _form: '\Drupal\bus_times\Form\SettingsForm'
+    _title: 'Bus Times Settings'
+  requirements:
+    _permission: 'administer bus times'
+

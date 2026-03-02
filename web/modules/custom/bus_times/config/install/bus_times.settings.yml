@@ -1,0 +1,15 @@
+source:
+  label: ''
+  api_key_id: ''
+  base_url: 'https://data.bus-data.dft.gov.uk/api/v1'
+  admin_area: ''
+  schedule: '0 3 * * *'
+  enabled: true
+import:
+  batch_size: 500
+  timeout: 30
+  log_retention: 30
+display:
+  realtime_poll_interval: 30
+  departures_limit: 10
+  map_default_zoom: 13

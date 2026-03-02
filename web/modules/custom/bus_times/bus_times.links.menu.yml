@@ -1,0 +1,6 @@
+bus_times.settings:
+  title: 'Bus Times'
+  description: 'Configure the BODS API connection and import settings.'
+  route_name: bus_times.settings
+  parent: system.admin_config
+  weight: 10

@@ -1,0 +1,52 @@
+bus_times.settings:
+  type: config_object
+  label: 'Bus Times settings'
+  mapping:
+    source:
+      type: mapping
+      label: 'Data source'
+      mapping:
+        label:
+          type: string
+          label: 'Source label'
+        api_key_id:
+          type: string
+          label: 'Key entity ID'
+        base_url:
+          type: string
+          label: 'BODS API base URL'
+        admin_area:
+          type: string
+          label: 'ATCO admin area code'
+        schedule:
+          type: string
+          label: 'Import cron schedule'
+        enabled:
+          type: boolean
+          label: 'Source enabled'
+    import:
+      type: mapping
+      label: 'Import settings'
+      mapping:
+        batch_size:
+          type: integer
+          label: 'Import batch size'
+        timeout:
+          type: integer
+          label: 'HTTP timeout (seconds)'
+        log_retention:
+          type: integer
+          label: 'Log retention (days)'
+    display:
+      type: mapping
+      label: 'Display settings'
+      mapping:
+        realtime_poll_interval:
+          type: integer
+          label: 'Real-time poll interval (seconds)'
+        departures_limit:
+          type: integer
+          label: 'Default departures to show'
+        map_default_zoom:
+          type: integer
+          label: 'Map default zoom level'

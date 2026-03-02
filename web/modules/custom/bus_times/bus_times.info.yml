@@ -1,0 +1,10 @@
+name: Bus Times
+description: 'UK bus information from the Bus Open Data Service (BODS). Provides timetables, departure boards, maps, and real-time arrivals for any UK council.'
+type: module
+core_version_requirement: ^10.2 || ^11
+package: Bus Times
+configure: bus_times.settings
+
+dependencies:
+  - drupal:system
+  - drupal:key

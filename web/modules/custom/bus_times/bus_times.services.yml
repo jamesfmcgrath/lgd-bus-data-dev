@@ -1,0 +1,12 @@
+services:
+  bus_times.bods_api_client:
+    class: Drupal\bus_times\Service\BodsApiClient
+    arguments:
+      - '@http_client'
+      - '@config.factory'
+      - '@key.repository'
+      - '@logger.channel.bus_times'
+
+  logger.channel.bus_times:
+    parent: logger.channel_base
+    arguments: ['bus_times']
