@@ -114,12 +114,16 @@ final class GtfsFilter {
    */
   private function collectInBoxStopIds(string $file, array $bbox): array {
     $inBox = [];
-    $this->scanCsv($file, function (array $header, array $row) use ($bbox, &$inBox): void {
-      $lat = (float) ($row[array_search('stop_lat', $header, TRUE)] ?? 0);
-      $lon = (float) ($row[array_search('stop_lon', $header, TRUE)] ?? 0);
+    $cols = $this->resolveColumns($file, ['stop_lat', 'stop_lon', 'stop_id']);
+    if ($cols === FALSE) {
+      return $inBox;
+    }
+    $this->scanCsv($file, function (array $header, array $row) use ($bbox, $cols, &$inBox): void {
+      $lat = (float) ($row[$cols['stop_lat']] ?? 0);
+      $lon = (float) ($row[$cols['stop_lon']] ?? 0);
       if ($lat >= $bbox['south'] && $lat <= $bbox['north']
         && $lon >= $bbox['west'] && $lon <= $bbox['east']) {
-        $stopId = $row[array_search('stop_id', $header, TRUE)] ?? '';
+        $stopId = (string) ($row[$cols['stop_id']] ?? '');
         if ($stopId !== '') {
           $inBox[$stopId] = TRUE;
         }
@@ -143,10 +147,14 @@ final class GtfsFilter {
    */
   private function collectValidTripIds(string $file, array $inBoxStopIds): array {
     $validTrips = [];
-    $this->scanCsv($file, function (array $header, array $row) use ($inBoxStopIds, &$validTrips): void {
-      $stopId = $row[array_search('stop_id', $header, TRUE)] ?? '';
+    $cols = $this->resolveColumns($file, ['stop_id', 'trip_id']);
+    if ($cols === FALSE) {
+      return $validTrips;
+    }
+    $this->scanCsv($file, function (array $header, array $row) use ($inBoxStopIds, $cols, &$validTrips): void {
+      $stopId = (string) ($row[$cols['stop_id']] ?? '');
       if (isset($inBoxStopIds[$stopId])) {
-        $tripId = $row[array_search('trip_id', $header, TRUE)] ?? '';
+        $tripId = (string) ($row[$cols['trip_id']] ?? '');
         if ($tripId !== '') {
           $validTrips[$tripId] = TRUE;
         }
@@ -171,12 +179,16 @@ final class GtfsFilter {
    */
   private function rewriteStopTimesAndCollectStops(string $file, array $validTripIds): array {
     $neededStopIds = [];
+    $cols = $this->resolveColumns($file, ['trip_id', 'stop_id']);
+    if ($cols === FALSE) {
+      return $neededStopIds;
+    }
     $this->rewriteCsv(
       $file,
-      function (array $header, array $row) use ($validTripIds, &$neededStopIds): bool {
-        $tripId = $row[array_search('trip_id', $header, TRUE)] ?? '';
+      function (array $header, array $row) use ($validTripIds, $cols, &$neededStopIds): bool {
+        $tripId = (string) ($row[$cols['trip_id']] ?? '');
         if (isset($validTripIds[$tripId])) {
-          $stopId = $row[array_search('stop_id', $header, TRUE)] ?? '';
+          $stopId = (string) ($row[$cols['stop_id']] ?? '');
           if ($stopId !== '') {
             $neededStopIds[$stopId] = TRUE;
           }
@@ -201,10 +213,14 @@ final class GtfsFilter {
    */
   private function rewriteByStopId(string $file, array $neededStopIds): int {
     $count = 0;
+    $cols = $this->resolveColumns($file, ['stop_id']);
+    if ($cols === FALSE) {
+      return $count;
+    }
     $this->rewriteCsv(
       $file,
-      function (array $header, array $row) use ($neededStopIds, &$count): bool {
-        $stopId = $row[array_search('stop_id', $header, TRUE)] ?? '';
+      function (array $header, array $row) use ($neededStopIds, $cols, &$count): bool {
+        $stopId = (string) ($row[$cols['stop_id']] ?? '');
         if (isset($neededStopIds[$stopId])) {
           $count++;
           return TRUE;
@@ -231,10 +247,14 @@ final class GtfsFilter {
       return 0;
     }
     $count = 0;
+    $cols = $this->resolveColumns($file, ['trip_id']);
+    if ($cols === FALSE) {
+      return $count;
+    }
     $this->rewriteCsv(
       $file,
-      function (array $header, array $row) use ($validTripIds, &$count): bool {
-        $tripId = $row[array_search('trip_id', $header, TRUE)] ?? '';
+      function (array $header, array $row) use ($validTripIds, $cols, &$count): bool {
+        $tripId = (string) ($row[$cols['trip_id']] ?? '');
         if (isset($validTripIds[$tripId])) {
           $count++;
           return TRUE;
@@ -243,6 +263,50 @@ final class GtfsFilter {
       },
     );
     return $count;
+  }
+
+  /**
+   * Opens a CSV file, reads the header row, and resolves column indices.
+   *
+   * The file is opened only to read the header; data rows are processed
+   * separately by scanCsv() or rewriteCsv(). The small overhead of a second
+   * fopen() is negligible compared to iterating hundreds of thousands of rows.
+   *
+   * @param string $file
+   *   Absolute path to the CSV file.
+   * @param string[] $columns
+   *   Required column names to resolve.
+   *
+   * @return array<string, int>|false
+   *   Map of column name to 0-based integer index, or FALSE if the file
+   *   cannot be read or any required column is absent from the header.
+   */
+  private function resolveColumns(string $file, array $columns): array|false {
+    if (!file_exists($file)) {
+      return FALSE;
+    }
+    $fh = fopen($file, 'r');
+    if ($fh === FALSE) {
+      return FALSE;
+    }
+    $header = fgetcsv($fh);
+    fclose($fh);
+    if (!is_array($header)) {
+      return FALSE;
+    }
+    $indices = [];
+    foreach ($columns as $col) {
+      $idx = array_search($col, $header, TRUE);
+      if ($idx === FALSE) {
+        $this->logger->error(
+          'GtfsFilter: @file is missing required column "@col".',
+          ['@file' => basename($file), '@col' => $col],
+        );
+        return FALSE;
+      }
+      $indices[$col] = $idx;
+    }
+    return $indices;
   }
 
   /**

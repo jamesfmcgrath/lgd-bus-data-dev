@@ -259,6 +259,8 @@ final class BodsApiClient {
       $this->logger->warning('Bus Times: Key entity "@id" not found.', ['@id' => $apiKeyId]);
       return '';
     }
+    // KeyInterface declares @return string but implementations may return null.
+    // @phpstan-ignore-next-line
     return (string) ($key->getKeyValue() ?? '');
   }
 
