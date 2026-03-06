@@ -97,3 +97,6 @@ CLAUDE.md
 !README.md
 !README.*.md
 /web/README.md
+
+# Ignore localgov_bus_data module
+web/modules/custom/localgov_bus_data
