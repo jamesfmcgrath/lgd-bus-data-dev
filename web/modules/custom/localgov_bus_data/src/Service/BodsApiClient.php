@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\bus_times\Service;
+namespace Drupal\localgov_bus_data\Service;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\key\KeyRepositoryInterface;
@@ -36,7 +36,7 @@ final class BodsApiClient {
   public function testConnection(): array {
     $apiKey = $this->resolveApiKey();
     if ($apiKey === '') {
-      return ['success' => FALSE, 'message' => 'No API key configured. Select a Key entity in Bus Times Settings.'];
+      return ['success' => FALSE, 'message' => 'No API key configured. Select a Key entity in LocalGov Bus Data Settings.'];
     }
 
     try {
@@ -174,7 +174,7 @@ final class BodsApiClient {
     try {
       $response = $this->httpClient->request($method, $this->baseUrl() . $path, [
         'query'   => $query,
-        'timeout' => (int) ($this->configFactory->get('bus_times.settings')->get('import.timeout') ?? 30),
+        'timeout' => (int) ($this->configFactory->get('localgov_bus_data.settings')->get('import.timeout') ?? 30),
       ]);
 
       $decoded = json_decode((string) $response->getBody(), TRUE);
@@ -213,7 +213,7 @@ final class BodsApiClient {
   private function requestRaw(string $method, string $urlWithQuery): array {
     try {
       $response = $this->httpClient->request($method, $this->baseUrl() . $urlWithQuery, [
-        'timeout' => (int) ($this->configFactory->get('bus_times.settings')->get('import.timeout') ?? 30),
+        'timeout' => (int) ($this->configFactory->get('localgov_bus_data.settings')->get('import.timeout') ?? 30),
       ]);
 
       $decoded = json_decode((string) $response->getBody(), TRUE);
@@ -239,7 +239,7 @@ final class BodsApiClient {
    *   The base URL read fresh from config on every call.
    */
   private function baseUrl(): string {
-    $url = (string) ($this->configFactory->get('bus_times.settings')->get('source.base_url') ?? 'https://data.bus-data.dft.gov.uk/api/v1');
+    $url = (string) ($this->configFactory->get('localgov_bus_data.settings')->get('source.base_url') ?? 'https://data.bus-data.dft.gov.uk/api/v1');
     return rtrim($url, '/');
   }
 
@@ -250,7 +250,7 @@ final class BodsApiClient {
    *   The raw API key string, or empty string if not configured.
    */
   private function resolveApiKey(): string {
-    $apiKeyId = (string) ($this->configFactory->get('bus_times.settings')->get('source.api_key_id') ?? '');
+    $apiKeyId = (string) ($this->configFactory->get('localgov_bus_data.settings')->get('source.api_key_id') ?? '');
     if ($apiKeyId === '') {
       return '';
     }

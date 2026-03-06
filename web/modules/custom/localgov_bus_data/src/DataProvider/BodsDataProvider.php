@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Drupal\bus_times\DataProvider;
+namespace Drupal\localgov_bus_data\DataProvider;
 
-use Drupal\bus_times\Service\BodsApiClient;
+use Drupal\localgov_bus_data\Service\BodsApiClient;
 
 /**
  * BODS (Bus Open Data Service) data provider.

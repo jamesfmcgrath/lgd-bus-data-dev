@@ -1,4 +1,0 @@
-administer bus times:
-  title: 'Administer Bus Times'
-  description: 'Configure API sources, trigger imports, and manage Bus Times settings.'
-  restrict access: true

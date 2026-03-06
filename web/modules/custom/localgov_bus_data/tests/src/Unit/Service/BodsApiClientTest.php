@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\bus_times\Unit\Service;
+namespace Drupal\Tests\localgov_bus_data\Unit\Service;
 
-use Drupal\bus_times\Service\BodsApiClient;
+use Drupal\localgov_bus_data\Service\BodsApiClient;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\ImmutableConfig;
 use Drupal\key\KeyInterface;
@@ -21,8 +21,8 @@ use Psr\Log\LoggerInterface;
  * All HTTP, config, key, and logger dependencies are mocked so that no real
  * network calls or Drupal container are needed.
  *
- * @coversDefaultClass \Drupal\bus_times\Service\BodsApiClient
- * @group bus_times
+ * @coversDefaultClass \Drupal\localgov_bus_data\Service\BodsApiClient
+ * @group localgov_bus_data
  */
 final class BodsApiClientTest extends UnitTestCase {
 
@@ -47,7 +47,7 @@ final class BodsApiClientTest extends UnitTestCase {
 
     $configFactory = $this->createMock(ConfigFactoryInterface::class);
     $configFactory->method('get')
-      ->with('bus_times.settings')
+      ->with('localgov_bus_data.settings')
       ->willReturn($settings);
 
     return $configFactory;

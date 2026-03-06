@@ -1,6 +1,6 @@
-bus_times.settings:
-  title: 'Bus Times'
+localgov_bus_data.settings:
+  title: 'LocalGov Bus Data'
   description: 'Configure the BODS API connection and import settings.'
-  route_name: bus_times.settings
+  route_name: localgov_bus_data.settings
   parent: system.admin_config_services
   weight: 10

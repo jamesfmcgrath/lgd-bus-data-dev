@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 /**
  * @file
- * Install, update, and uninstall functions for the Bus Times module.
+ * Install, update, and uninstall functions for the LocalGov Bus Data module.
  */
 
 /**
  * Migrate admin_area to admin_area_codes and add bounding_box defaults.
  */
-function bus_times_update_10001(): void {
-  $config = \Drupal::configFactory()->getEditable('bus_times.settings');
+function localgov_bus_data_update_10001(): void {
+  $config = \Drupal::configFactory()->getEditable('localgov_bus_data.settings');
 
   // Carry forward any existing value; default to Cumberland's NaPTAN codes.
   $existing = (string) ($config->get('source.admin_area') ?? '');

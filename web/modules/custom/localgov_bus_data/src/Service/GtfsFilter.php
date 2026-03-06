@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\bus_times\Service;
+namespace Drupal\localgov_bus_data\Service;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Psr\Log\LoggerInterface;
@@ -393,7 +393,7 @@ final class GtfsFilter {
    *   NULL if no valid bounding box is configured.
    */
   private function getBoundingBox(): ?array {
-    $bbox = $this->configFactory->get('bus_times.settings')->get('source.bounding_box');
+    $bbox = $this->configFactory->get('localgov_bus_data.settings')->get('source.bounding_box');
 
     if (!is_array($bbox)
       || !isset($bbox['north'], $bbox['south'], $bbox['east'], $bbox['west'])

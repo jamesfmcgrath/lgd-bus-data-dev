@@ -1,8 +1,0 @@
-<?php
-
-/**
- * @file
- * Bus Times module – UK bus information from the Bus Open Data Service (BODS).
- */
-
-declare(strict_types=1);

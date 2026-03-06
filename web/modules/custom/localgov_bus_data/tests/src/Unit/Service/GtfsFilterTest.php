@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\bus_times\Unit\Service;
+namespace Drupal\Tests\localgov_bus_data\Unit\Service;
 
-use Drupal\bus_times\Service\GtfsFilter;
+use Drupal\localgov_bus_data\Service\GtfsFilter;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Tests\UnitTestCase;
@@ -16,8 +16,8 @@ use Psr\Log\LoggerInterface;
  * Uses real temporary CSV files so that file I/O logic (fgetcsv, fputcsv,
  * rename) is exercised without any filesystem mocking.
  *
- * @coversDefaultClass \Drupal\bus_times\Service\GtfsFilter
- * @group bus_times
+ * @coversDefaultClass \Drupal\localgov_bus_data\Service\GtfsFilter
+ * @group localgov_bus_data
  */
 final class GtfsFilterTest extends UnitTestCase {
 

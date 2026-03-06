@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\bus_times\DataProvider;
+namespace Drupal\localgov_bus_data\DataProvider;
 
 /**
  * Contract for GTFS data provider plugins.

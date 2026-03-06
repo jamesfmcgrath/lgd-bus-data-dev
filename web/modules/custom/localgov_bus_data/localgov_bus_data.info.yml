@@ -1,9 +1,9 @@
-name: Bus Times
+name: LocalGov Bus Data
 description: 'UK bus information from the Bus Open Data Service (BODS). Provides timetables, departure boards, maps, and real-time arrivals for any UK council.'
 type: module
 core_version_requirement: ^10.2 || ^11
-package: Bus Times
-configure: bus_times.settings
+package: LocalGov Drupal
+configure: localgov_bus_data.settings
 
 dependencies:
   - drupal:system

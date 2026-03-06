@@ -1,0 +1,4 @@
+administer localgov bus data:
+  title: 'Administer LocalGov Bus Data'
+  description: 'Configure API sources, trigger imports, and manage LocalGov Bus Data settings.'
+  restrict access: true

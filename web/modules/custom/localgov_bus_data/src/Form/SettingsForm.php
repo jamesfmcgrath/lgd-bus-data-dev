@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Drupal\bus_times\Form;
+namespace Drupal\localgov_bus_data\Form;
 
-use Drupal\bus_times\Service\BodsApiClient;
+use Drupal\localgov_bus_data\Service\BodsApiClient;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -12,7 +12,7 @@ use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Bus Times admin settings form.
+ * LocalGov Bus Data admin settings form.
  *
  * Provides API source configuration and a live test-connection button.
  */
@@ -25,7 +25,7 @@ final class SettingsForm extends ConfigFormBase {
    * runs in FormBase's scope, so get_object_vars() cannot see private child
    * properties. ReverseContainer detects the service ID; __wakeup() reinjects.
    *
-   * @var \Drupal\bus_times\Service\BodsApiClient
+   * @var \Drupal\localgov_bus_data\Service\BodsApiClient
    */
   protected BodsApiClient $apiClient;
 
@@ -43,7 +43,7 @@ final class SettingsForm extends ConfigFormBase {
   public static function create(ContainerInterface $container): static {
     return new static(
       $container->get('config.factory'),
-      $container->get('bus_times.bods_api_client'),
+      $container->get('localgov_bus_data.bods_api_client'),
     );
   }
 
@@ -51,21 +51,21 @@ final class SettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function getFormId(): string {
-    return 'bus_times_settings';
+    return 'localgov_bus_data_settings';
   }
 
   /**
    * {@inheritdoc}
    */
   protected function getEditableConfigNames(): array {
-    return ['bus_times.settings'];
+    return ['localgov_bus_data.settings'];
   }
 
   /**
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state): array {
-    $config = $this->config('bus_times.settings');
+    $config = $this->config('localgov_bus_data.settings');
 
     $form['source'] = [
       '#type' => 'details',
@@ -319,7 +319,7 @@ final class SettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state): void {
-    $this->config('bus_times.settings')
+    $this->config('localgov_bus_data.settings')
       ->set('source.label', $form_state->getValue('label'))
       ->set('source.api_key_id', $form_state->getValue('api_key_id'))
       ->set('source.base_url', rtrim((string) $form_state->getValue('base_url'), '/'))

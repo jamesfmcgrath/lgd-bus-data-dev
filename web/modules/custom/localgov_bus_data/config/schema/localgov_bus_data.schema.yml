@@ -1,4 +1,4 @@
-bus_times.settings:
+localgov_bus_data.settings:
   type: config_object
   label: 'Bus Times settings'
   mapping:

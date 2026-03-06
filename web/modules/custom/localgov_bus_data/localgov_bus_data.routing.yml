@@ -1,0 +1,8 @@
+localgov_bus_data.settings:
+  path: '/admin/config/localgov-bus-data/settings'
+  defaults:
+    _form: '\Drupal\localgov_bus_data\Form\SettingsForm'
+    _title: 'LocalGov Bus Data Settings'
+  requirements:
+    _permission: 'administer localgov bus data'
+
