@@ -1,0 +1,27 @@
+uuid: 0344754f-e46e-4f8e-9ce4-59bcaef20138
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.localgov-services-menu
+  module:
+    - system
+  theme:
+    - localgov_base
+_core:
+  default_config_hash: u7c6C7B0hydo2cash4C4ystF-sNNqqvGEIiLFDFbMOU
+id: localgov_servicesmenu_base
+theme: localgov_base
+region: secondary_menu
+weight: -6
+provider: null
+plugin: 'system_menu_block:localgov-services-menu'
+settings:
+  id: 'system_menu_block:localgov-services-menu'
+  label: 'Services menu'
+  label_display: '0'
+  provider: system
+  level: 1
+  depth: 0
+  expand_all_items: false
+visibility: {  }

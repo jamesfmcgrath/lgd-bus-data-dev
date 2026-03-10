@@ -18,6 +18,8 @@
         "drupal/key": "^1.22",
         "drupal/localgov": "^3.0",
         "drupal/localgov_search_solr": "^1.1",
+        "drupal/migrate_plus": "^6.0",
+        "drupal/migrate_source_csv": "^3.8",
         "wikimedia/composer-merge-plugin": "^2.1"
     },
     "require-dev": {

@@ -1,0 +1,40 @@
+uuid: 875148d2-ae2b-4002-ad60-4e31aee55893
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - localgov_bus_data
+      - migrate_plus
+      - migrate_source_csv
+id: localgov_bus_data_trips
+class: null
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags: null
+migration_group: localgov_bus_data
+label: 'Import bus trips from GTFS trips.txt'
+source:
+  plugin: csv
+  path: 'public://bus-times/gtfs/trips.txt'
+  ids:
+    - trip_id
+process:
+  trip_id: trip_id
+  route_id:
+    plugin: migration_lookup
+    migration: localgov_bus_data_routes
+    source: route_id
+  service_id:
+    plugin: migration_lookup
+    migration: localgov_bus_data_calendars
+    source: service_id
+  direction_id: direction_id
+  trip_headsign: trip_headsign
+destination:
+  plugin: 'entity:bus_trip'
+idMap: {  }
+migration_dependencies:
+  required:
+    - localgov_bus_data_routes
+    - localgov_bus_data_calendars

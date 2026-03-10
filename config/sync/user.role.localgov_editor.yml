@@ -1,0 +1,90 @@
+uuid: f0ef8ad9-3395-42d5-b19c-db389a40b3b0
+langcode: en
+status: true
+dependencies:
+  config:
+    - media.type.document
+    - media.type.image
+    - media.type.remote_video
+    - node.type.localgov_services_landing
+    - node.type.localgov_services_page
+    - node.type.localgov_services_sublanding
+    - taxonomy.vocabulary.localgov_topic
+  module:
+    - media
+    - node
+    - paragraphs
+    - paragraphs_library
+    - path
+    - system
+    - taxonomy
+    - toolbar
+  enforced:
+    module:
+      - localgov_roles
+_core:
+  default_config_hash: UkCin46F2l9IknoHKmEvDFcRoJxt13moynYmMSx7KWY
+id: localgov_editor
+label: Editor
+weight: 2
+is_admin: null
+permissions:
+  - 'access content overview'
+  - 'access media overview'
+  - 'access toolbar'
+  - 'create document media'
+  - 'create image media'
+  - 'create localgov_services_landing content'
+  - 'create localgov_services_page content'
+  - 'create localgov_services_sublanding content'
+  - 'create media'
+  - 'create paragraph library item'
+  - 'create remote_video media'
+  - 'create terms in localgov_topic'
+  - 'create url aliases'
+  - 'delete any document media'
+  - 'delete any image media'
+  - 'delete any localgov_services_landing content'
+  - 'delete any localgov_services_page content'
+  - 'delete any localgov_services_sublanding content'
+  - 'delete any media'
+  - 'delete any remote_video media'
+  - 'delete localgov_services_landing revisions'
+  - 'delete localgov_services_page revisions'
+  - 'delete localgov_services_sublanding revisions'
+  - 'delete media'
+  - 'delete own document media'
+  - 'delete own image media'
+  - 'delete own localgov_services_landing content'
+  - 'delete own localgov_services_page content'
+  - 'delete own localgov_services_sublanding content'
+  - 'delete own remote_video media'
+  - 'delete terms in localgov_topic'
+  - 'edit any document media'
+  - 'edit any image media'
+  - 'edit any localgov_services_landing content'
+  - 'edit any localgov_services_page content'
+  - 'edit any localgov_services_sublanding content'
+  - 'edit any remote_video media'
+  - 'edit own document media'
+  - 'edit own image media'
+  - 'edit own localgov_services_landing content'
+  - 'edit own localgov_services_page content'
+  - 'edit own localgov_services_sublanding content'
+  - 'edit own remote_video media'
+  - 'edit paragraph library item'
+  - 'edit terms in localgov_topic'
+  - 'revert all revisions'
+  - 'revert localgov_services_landing revisions'
+  - 'revert localgov_services_page revisions'
+  - 'revert localgov_services_sublanding revisions'
+  - 'update any media'
+  - 'update media'
+  - 'view all revisions'
+  - 'view localgov_services_landing revisions'
+  - 'view localgov_services_page revisions'
+  - 'view localgov_services_sublanding revisions'
+  - 'view own unpublished content'
+  - 'view own unpublished media'
+  - 'view the administration theme'
+  - 'view unpublished paragraphs'

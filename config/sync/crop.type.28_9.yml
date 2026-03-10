@@ -1,0 +1,14 @@
+uuid: c03e5f31-c4f1-4b1a-93dd-b5f4c9b91a29
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: wFjZ2ZUHr_x1hTDlmlb6gA7sO_0hdvyA7QVNzcQInS8
+id: '28_9'
+label: '28:9'
+description: ''
+aspect_ratio: '28:9'
+soft_limit_width: null
+soft_limit_height: null
+hard_limit_width: null
+hard_limit_height: null

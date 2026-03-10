@@ -1,0 +1,23 @@
+_core:
+  default_config_hash: PKt4CiKDH-st-wiIIMGZjtbcjZDffzorJA0VdzBcWTQ
+source:
+  label: 'Cumberland BODS'
+  api_key_id: bods_api_key
+  base_url: 'https://data.bus-data.dft.gov.uk/api/v1'
+  bulk_gtfs_url: 'https://data.bus-data.dft.gov.uk/timetable/download/gtfs-file/all/'
+  admin_area_codes: '090'
+  bounding_box:
+    north: 55.1
+    south: 54.3
+    east: -2.0
+    west: -3.75
+  schedule: '0 3 * * *'
+  enabled: true
+import:
+  batch_size: 500
+  timeout: 30
+  log_retention: 30
+display:
+  realtime_poll_interval: 30
+  departures_limit: 10
+  map_default_zoom: 13

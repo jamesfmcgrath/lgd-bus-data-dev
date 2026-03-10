@@ -1,0 +1,41 @@
+uuid: 63fac918-0252-4235-9667-b120a5960016
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - localgov_bus_data
+      - migrate_plus
+      - migrate_source_csv
+id: localgov_bus_data_stop_times
+class: null
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags: null
+migration_group: localgov_bus_data
+label: 'Import stop times from GTFS stop_times.txt'
+source:
+  plugin: csv
+  path: 'public://bus-times/gtfs/stop_times.txt'
+  ids:
+    - trip_id
+    - stop_sequence
+process:
+  trip_id:
+    plugin: migration_lookup
+    migration: localgov_bus_data_trips
+    source: trip_id
+  stop_id:
+    plugin: migration_lookup
+    migration: localgov_bus_data_stops
+    source: stop_id
+  arrival_time: arrival_time
+  departure_time: departure_time
+  stop_sequence: stop_sequence
+destination:
+  plugin: 'entity:bus_stop_time'
+idMap: {  }
+migration_dependencies:
+  required:
+    - localgov_bus_data_trips
+    - localgov_bus_data_stops

@@ -1,0 +1,53 @@
+uuid: 8f37c4d6-88e6-48d1-abd6-6771aa69f9eb
+langcode: en
+status: true
+dependencies:
+  module:
+    - localgov_core
+    - node
+    - paragraphs_library
+_core:
+  default_config_hash: IBlhZAZ1s3F4iSaFK3-1szHc3oytlwLVTDQDpEaXXuI
+label: Default
+id: default
+description: 'A default Linkit profile'
+matchers:
+  556010a3-e317-48b3-b4ed-854c10f4b950:
+    id: 'entity:node'
+    uuid: 556010a3-e317-48b3-b4ed-854c10f4b950
+    settings:
+      metadata: ''
+      bundles: {  }
+      group_by_bundle: true
+      substitution_type: canonical
+      limit: 100
+      include_unpublished: true
+    weight: -10
+  c3257417-fce9-4307-8251-58672edf88be:
+    id: email
+    uuid: c3257417-fce9-4307-8251-58672edf88be
+    settings: {  }
+    weight: -8
+  ce6c1f02-c84f-45b9-a8cd-5ca4901ff1e5:
+    id: 'entity:paragraphs_library_item'
+    uuid: ce6c1f02-c84f-45b9-a8cd-5ca4901ff1e5
+    settings:
+      metadata: ''
+      bundles:
+        localgov_contact: localgov_contact
+        localgov_link: localgov_link
+      group_by_bundle: true
+      substitution_type: paragraphs_library_item_localgovdrupal
+      limit: 20
+    weight: -7
+  9f1a0ab1-0e93-4a64-be91-34356fd3c742:
+    id: 'entity:media'
+    uuid: 9f1a0ab1-0e93-4a64-be91-34356fd3c742
+    settings:
+      metadata: '[media:bundle] | [media:name]'
+      bundles:
+        document: document
+      group_by_bundle: true
+      substitution_type: media
+      limit: 100
+    weight: -9

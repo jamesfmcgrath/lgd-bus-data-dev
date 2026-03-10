@@ -1,0 +1,40 @@
+uuid: bbed4b27-b164-46f4-a7dd-28ca76deea39
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.localgov_image.localgov_caption
+    - field.field.paragraph.localgov_image.localgov_image
+    - paragraphs.paragraphs_type.localgov_image
+  module:
+    - media_library
+    - media_library_edit
+    - text
+_core:
+  default_config_hash: SpgrhpoQjR-JYNu6WVLy_QxM2HVwXHZjBZWQD1qeI08
+id: paragraph.localgov_image.default
+targetEntityType: paragraph
+bundle: localgov_image
+mode: default
+content:
+  localgov_caption:
+    weight: 2
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: text_textarea
+    region: content
+  localgov_image:
+    weight: 1
+    settings:
+      media_types: {  }
+    third_party_settings:
+      media_library_edit:
+        show_edit: true
+    type: media_library_widget
+    region: content
+hidden:
+  created: true
+  status: true
+  uid: true

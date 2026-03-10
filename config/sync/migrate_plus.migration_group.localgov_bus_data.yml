@@ -1,0 +1,14 @@
+uuid: 8cdae476-3560-402d-ba49-3385bd09a481
+langcode: en
+status: true
+dependencies: {  }
+id: localgov_bus_data
+label: 'LocalGov Bus Data GTFS import'
+description: 'Imports Cumberland bus timetable data from BODS GTFS files.'
+source_type: csv
+module: null
+shared_configuration:
+  source:
+    delimiter: ','
+    enclosure: '"'
+    header_offset: 0

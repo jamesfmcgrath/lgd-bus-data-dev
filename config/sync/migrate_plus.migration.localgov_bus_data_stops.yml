@@ -1,0 +1,31 @@
+uuid: 614794ef-b412-4453-9f37-6b9827e83194
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - localgov_bus_data
+      - migrate_plus
+      - migrate_source_csv
+id: localgov_bus_data_stops
+class: null
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags: null
+migration_group: localgov_bus_data
+label: 'Import bus stops from GTFS stops.txt'
+source:
+  plugin: csv
+  path: 'public://bus-times/gtfs/stops.txt'
+  ids:
+    - stop_id
+process:
+  stop_id: stop_id
+  stop_name: stop_name
+  stop_lat: stop_lat
+  stop_lon: stop_lon
+  wheelchair_boarding: wheelchair_boarding
+destination:
+  plugin: 'entity:bus_stop'
+idMap: {  }
+migration_dependencies: {  }

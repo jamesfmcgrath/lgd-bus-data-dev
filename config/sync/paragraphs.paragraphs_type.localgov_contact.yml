@@ -1,0 +1,17 @@
+uuid: 73f0fe63-f7f7-4207-8f31-700bab937cf1
+langcode: en
+status: true
+dependencies:
+  module:
+    - paragraphs_library
+third_party_settings:
+  paragraphs_library:
+    allow_library_conversion: true
+_core:
+  default_config_hash: bhKlaVyp2cIWbeDXkA6d-dO79LkwsL2x9N6KmtAGaJM
+id: localgov_contact
+label: Contact
+icon_uuid: null
+icon_default: null
+description: ''
+behavior_plugins: {  }
