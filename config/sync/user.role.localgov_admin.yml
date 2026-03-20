@@ -1,0 +1,9 @@
+uuid: b37570b9-e432-4d7e-aafe-614451d0c9a6
+langcode: en
+status: true
+dependencies: {  }
+id: localgov_admin
+label: 'LocalGov Admin'
+weight: 6
+is_admin: true
+permissions: {  }
