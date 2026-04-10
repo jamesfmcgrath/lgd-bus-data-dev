@@ -12,7 +12,7 @@ This repo provides a preconfigured [LocalGov Drupal](https://localgovdrupal.org)
 ## Quick start
 
 ```bash
-git clone git@github.com:the-confident/lgd-bus-times.git  # this dev env repo
+git clone git@github.com:jamesfmcgrath/lgd-bus-times.git  # this dev env repo
 cd lgd-bus-times
 ./scripts/setup.sh
 ```
