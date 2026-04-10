@@ -82,10 +82,16 @@ ddev composer install
 success "Dependencies installed."
 
 # ── Drupal install ───────────────────────────────────────────────────────────
+# Note: --existing-config cannot be used with the localgov profile because it
+# implements hook_install(). Instead we do a plain install then import config.
 
 info "Installing LocalGov Drupal..."
-ddev drush si localgov --existing-config -y
+ddev drush si localgov --account-pass=admin -y
 success "Drupal installed."
+
+info "Importing configuration..."
+ddev drush cim -y
+success "Configuration imported."
 
 info "Enabling localgov_bus_data module..."
 ddev drush en localgov_bus_data -y
