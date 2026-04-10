@@ -1,0 +1,30 @@
+# Source to fetch skills from
+default_source = "github"
+
+# Tools to install skills to (e.g. "claude", "cursor", "codex")
+tools = ["claude", "cursor"]
+
+# Primary tool for instruction sync (must be listed in tools)
+# default_tool = "claude"
+
+# Default GitHub owner for short handles (e.g. "skill" resolves to "computerlovetech/skill")
+default_owner = "computerlovetech"
+
+# Default GitHub repo for two-part handles (e.g. "owner/skill" resolves to "owner/skills/skill")
+default_repo = "skills"
+
+# Sync instruction files across tools
+# sync_instructions = false
+
+# Which tool's instruction file is the source of truth
+# canonical_instructions = "CLAUDE.md"
+
+dependencies = [
+    {handle = "madsnorgaard/drupal-agent-resources/drupal-expert", type = "skill"},
+    {handle = "madsnorgaard/drupal-agent-resources/ddev-expert", type = "skill"},
+]
+
+[[source]]
+name = "github"
+type = "git"
+url = "https://github.com/{owner}/{repo}.git"

@@ -91,6 +91,8 @@
 .claire/
 # CLAUDE.md, .claude/MEMORY.md, and .cursorrules ARE tracked (see below)
 .claude/settings.local.json
+# Skills are installed from agr.toml + agr.lock (agr sync / setup.sh); do not vendor copies
+.claude/skills/
 
 # Markdown — working notes ignored; project docs are tracked explicitly
 *.md
