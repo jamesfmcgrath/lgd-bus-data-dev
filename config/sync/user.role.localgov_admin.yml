@@ -1,9 +1,0 @@
-uuid: 6c449a1f-c219-461c-8fdc-e39b80772c16
-langcode: en
-status: true
-dependencies: {  }
-id: localgov_admin
-label: 'LocalGov Admin'
-weight: 6
-is_admin: true
-permissions: {  }

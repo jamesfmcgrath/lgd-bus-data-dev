@@ -89,9 +89,9 @@ info "Installing LocalGov Drupal..."
 ddev drush si localgov --account-pass=admin -y
 success "Drupal installed."
 
-info "Importing configuration..."
-ddev drush cim -y
-success "Configuration imported."
+# info "Importing configuration..."
+# ddev drush cim -y
+# success "Configuration imported."
 
 info "Enabling localgov_bus_data module..."
 ddev drush en localgov_bus_data -y
