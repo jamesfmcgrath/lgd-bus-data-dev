@@ -5,7 +5,7 @@ This is a Drupal 10/11 project — the `localgov_bus_data` module for Cumberland
 ## Project Context
 
 - **Module:** `web/modules/custom/localgov_bus_data/`
-- **DDEV:** `lgd-bus-times` at `https://lgd-bus-times.ddev.site` (PHP 8.3, nginx-fpm)
+- **DDEV:** `lgd-bus-data-dev` at `https://lgd-bus-data-dev.ddev.site` (PHP 8.3, nginx-fpm)
 - **Stack:** Drupal 10.2+, LGD (LocalGov Drupal), BODS GTFS bulk download, Leaflet.js + geofield, NaPTAN
 - **Key module:** Phase 5 only (real-time SIRI-SM auth) — not in current codebase
 - **Spec:** See `SPEC.md` for full phased delivery plan and architecture decisions

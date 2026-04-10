@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# lgd-bus-times — one-shot dev environment setup
+# lgd-bus-data-dev — one-shot dev environment setup
 # Run from the repo root: ./scripts/setup.sh
 set -euo pipefail
 
@@ -18,7 +18,7 @@ warn()    { echo -e "${YELLOW}⚠ $*${RESET}"; }
 error()   { echo -e "${RED}✘ $*${RESET}"; exit 1; }
 
 echo ""
-echo -e "${BOLD}=== lgd-bus-times dev environment setup ===${RESET}"
+echo -e "${BOLD}=== lgd-bus-data-dev dev environment setup ===${RESET}"
 echo ""
 
 # ── Prerequisites ────────────────────────────────────────────────────────────
@@ -97,8 +97,8 @@ success "Module enabled."
 echo ""
 echo -e "${GREEN}${BOLD}=== Setup complete ===${RESET}"
 echo ""
-echo -e "  Site:   ${BOLD}https://lgd-bus-times.ddev.site${RESET}"
-echo -e "  Admin:  ${BOLD}https://lgd-bus-times.ddev.site/admin${RESET}"
+echo -e "  Site:   ${BOLD}https://lgd-bus-data-dev.ddev.site${RESET}"
+echo -e "  Admin:  ${BOLD}https://lgd-bus-data-dev.ddev.site/admin${RESET}"
 echo ""
 echo "Next steps:"
 echo "  make seed          Load fixture data (no BODS connection needed)"

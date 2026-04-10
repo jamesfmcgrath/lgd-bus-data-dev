@@ -1,5 +1,5 @@
 ##
-## lgd-bus-times — dev environment for localgov_bus_data module
+## lgd-bus-data-dev — dev environment for localgov_bus_data module
 ## Usage: make <target>
 ##
 

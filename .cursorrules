@@ -7,7 +7,7 @@ Data source: BODS API (GTFS timetables + SIRI-VM real-time).
 See SPEC.md for full phased delivery plan and architecture decisions.
 
 - Module path: `web/modules/custom/localgov_bus_data/`
-- DDEV site: `https://lgd-bus-times.ddev.site` (PHP 8.3, nginx-fpm)
+- DDEV site: `https://lgd-bus-data-dev.ddev.site` (PHP 8.3, nginx-fpm)
 - Stack: Drupal 10.2+, LocalGov Drupal (LGD), Key module, Guzzle
 
 ## Agent Resources

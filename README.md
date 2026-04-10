@@ -1,4 +1,4 @@
-# lgd-bus-times — Dev Environment
+# lgd-bus-data-dev — Dev Environment
 
 Local development environment for the [`localgov_bus_data`](https://www.drupal.org/project/localgov_bus_data) Drupal module.
 
@@ -12,8 +12,8 @@ This repo provides a preconfigured [LocalGov Drupal](https://localgovdrupal.org)
 ## Quick start
 
 ```bash
-git clone git@github.com:jamesfmcgrath/lgd-bus-times.git  # this dev env repo
-cd lgd-bus-times
+git clone git@github.com:jamesfmcgrath/lgd-bus-data-dev.git  # this dev env repo
+cd lgd-bus-data-dev
 ./scripts/setup.sh
 ```
 

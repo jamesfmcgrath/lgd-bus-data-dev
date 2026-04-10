@@ -1,4 +1,4 @@
-name: lgd-bus-times
+name: lgd-bus-data-dev
 type: drupal10
 docroot: web
 php_version: '8.3'
