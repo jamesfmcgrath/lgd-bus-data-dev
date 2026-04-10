@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(<absolute-path-to-repo>/**)",
+      "Bash(./vendor/bin/phpcs -p web/modules/custom/localgov_bus_data/localgov_bus_data.module)",
+      "Bash(ls -la <absolute-path-to-repo>/web/modules/custom/localgov_bus_data/*.module)"
+    ]
+  }
+}

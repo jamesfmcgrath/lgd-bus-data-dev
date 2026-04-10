@@ -84,19 +84,24 @@
 .DS_Store
 **/.DS_Store
 
-# Local agent resources (clone separately, install via: agr add madsnorgaard/<resource>)
+# AI agent tools — tracked files are canonical dev-environment config
+# Install agent resources once via: agr add madsnorgaard/drupal-expert ddev-expert drupal-reviewer
 /drupal-agent-resources/
 .cursor/
-CLAUDE.md
-.claude/
 .claire/
-.cursorrules
+# CLAUDE.md, .claude/MEMORY.md, and .cursorrules ARE tracked (see below)
+.claude/settings.local.json
 
-# Ignore markdown files (working docs, specs, notes) — README files are kept
+# Markdown — working notes ignored; project docs are tracked explicitly
 *.md
 !README.md
 !README.*.md
+!SPEC.md
+!CLAUDE.md
 /web/README.md
 
-# Ignore localgov_bus_data module
-web/modules/custom/localgov_bus_data
+# Archive folder — stale working docs, not committed
+/_ARCHIVE/
+
+# Ignore localgov_bus_data module (lives in its own repo, cloned separately)
+/web/modules/custom/localgov_bus_data

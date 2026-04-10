@@ -1,48 +1,109 @@
-# LocalGov Drupal Composer project template
+# lgd-bus-times — Dev Environment
 
-![Tests](https://github.com/localgovdrupal/localgov_project/actions/workflows/test.yml/badge.svg)
+Local development environment for the [`localgov_bus_data`](https://www.drupal.org/project/localgov_bus_data) Drupal module.
 
-A Composer-based installer for the LocalGov Drupal distribution.
+This repo provides a preconfigured [LocalGov Drupal](https://localgovdrupal.org) install with DDEV, static analysis tooling, and AI agent context. The module lives in its own repo and is cloned into `web/modules/custom/localgov_bus_data/` (gitignored here).
 
-This project template should provide a kickstart for managing your site dependencies with Composer.
+## Requirements
 
-## Usage 
+- [DDEV](https://ddev.com) — local dev environment
+- [uv](https://docs.astral.sh/uv/) + [agent-resources](https://github.com/KasperJuunge/agent-resources) — Claude Code agent resources (optional but recommended)
 
-For guidance on installing see: 
+## Quick start
 
- - [Installing LocalGov Drupal locally with composer](https://github.com/localgovdrupal/localgov#installing-localgov-drupal-locally-with-composer)
- - [Getting started on LocalGov Drupal docs](https://docs.localgovdrupal.org/devs/getting-started/)
+```bash
+git clone git@github.com:the-confident/lgd-bus-times.git  # this dev env repo
+cd lgd-bus-times
+./scripts/setup.sh
+```
 
-## composer.json and composer.lock
+The setup script will: install agent resources, clone the module, start DDEV, install Drupal, and enable the module.
 
-We expect most projects using this package will start with the composer.json in this package, committing it to your own project repository as your own root composer.json. You can then extend composer.json, requiring other Drupal and composer packages and evolve your codebase as needed.
+## Manual setup
 
-Once you have run a `composer create-project` command, it is usually desirable to commit the composer.lock file to your project repository and use this lock file to control the specific version of packages that you deploy to dev, test and ultimately production hosting environments. 
+```bash
+# 1. Start DDEV and install dependencies
+ddev start
+ddev composer install
 
-## Gitpod
+# 2. Clone the module
+git clone git@git.drupal.org:project/localgov_bus_data.git web/modules/custom/localgov_bus_data
 
-Gitpod allows you to run a virtual development environment in the cloud in your browser. 
+# 3. Install Drupal
+ddev drush si localgov --existing-config -y
 
-This can be very useful for testing functionality, reviewing pull requests, or working on features. 
+# 4. Enable the module
+ddev drush en localgov_bus_data -y && ddev drush cr
 
-### Before you start
+# 5. Load fixture data (no BODS connection needed)
+make seed
+```
 
-You will need an account on Gitpod. 
+## Common commands
 
-If you authenticate with your Github account, you will be able to push commits back to the repository you are working on.
+```bash
+make help          # List all available commands
 
-[Sign up for gitpod.io](https://gitpod.io/login), if you haven't already. 
+make seed          # Load fixture data for local development
+make import        # Run incremental GTFS import from BODS
+make import-full   # Full re-import (rollback first)
+make import-dry    # Preview import without writing data
 
-### Spin up LocalGov Drupal with 
+make test          # Run PHPUnit test suite
+make lint          # PHPCS
+make lint-fix      # PHPCBF auto-fix
+make stan          # PHPStan static analysis
+make check         # Run all quality checks
 
-Click on the "Open in Gitpod" button below
+make cr            # Clear Drupal caches
+make si            # Fresh Drupal install
+make open          # Open site in browser
+```
 
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/localgovdrupal/localgov_project)
+## Project structure
 
-## Maintainers
+```
+.claude/
+  MEMORY.md              # AI agent persistent memory — keep this current
+  settings.local.json    # Machine-specific Claude Code permissions (gitignored)
+  settings.local.json.dist  # Template — copy and edit for your machine
+.ddev/
+  config.yaml            # DDEV project config
+scripts/
+  setup.sh               # One-shot environment setup
+CLAUDE.md                # AI coding guidelines (Claude Code + Cowork)
+SPEC.md                  # Full project specification and phased delivery plan
+Makefile                 # Dev workflow shortcuts
+```
 
-This project is currently maintained by: 
+## AI agent setup (Claude Code)
 
- - Ekes: https://www.drupal.org/u/ekes
- - Finn Lewis: https://www.drupal.org/u/finn-lewis
- - Stephen Cox: https://www.drupal.org/u/stephen-cox 
+Install the three agent resources once after cloning:
+
+```bash
+uv tool install agent-resources
+agr add madsnorgaard/drupal-expert
+agr add madsnorgaard/ddev-expert
+agr add madsnorgaard/drupal-reviewer
+```
+
+Copy and edit the Claude Code permissions file:
+
+```bash
+cp .claude/settings.local.json.dist .claude/settings.local.json
+# Edit settings.local.json — replace <absolute-path-to-repo> with your actual path
+```
+
+## Module
+
+The `localgov_bus_data` module is a standalone, reusable Drupal 10/11 module for UK council bus timetables, powered by BODS GTFS data. See `SPEC.md` for the full architecture and phased delivery plan.
+
+**Current status:** Alpha — Phases 1–4 complete (GTFS import, entities, Views, NaPTAN enrichment). Phase 5 (real-time departure times) is next.
+
+## Stack
+
+- Drupal 10.2+ / LocalGov Drupal 3.x
+- PHP 8.3, MariaDB 10.6, nginx-fpm (via DDEV)
+- BODS GTFS bulk download (no API key required for Phases 1–4)
+- Leaflet.js + OpenStreetMap
+- NaPTAN stop enrichment

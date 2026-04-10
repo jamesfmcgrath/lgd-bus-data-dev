@@ -1,0 +1,89 @@
+# Cursor Rules — localgov_bus_data Drupal Module
+
+## Project
+
+Drupal 10/11 custom module `localgov_bus_data` for Cumberland Council UK bus timetables.
+Data source: BODS API (GTFS timetables + SIRI-VM real-time).
+See SPEC.md for full phased delivery plan and architecture decisions.
+
+- Module path: `web/modules/custom/localgov_bus_data/`
+- DDEV site: `https://lgd-bus-times.ddev.site` (PHP 8.3, nginx-fpm)
+- Stack: Drupal 10.2+, LocalGov Drupal (LGD), Key module, Guzzle
+
+## Agent Resources
+
+Use these proactively — do not wait to be asked:
+
+- **drupal-reviewer** — run after EVERY Drupal PHP file is written or modified. Catches security,
+  DI violations, render escaping gaps, and best-practice issues PHPCS will not catch.
+- **drupal-expert** — use when uncertain about the correct Drupal API, hook, pattern, or contrib
+  option before writing non-trivial Drupal code.
+- **ddev-expert** — use when troubleshooting DDEV container, config, or service problems.
+
+## Running Commands
+
+Always use DDEV from the repo root. Never run php/drush/composer directly.
+
+```bash
+ddev drush <command>
+ddev composer <command>
+```
+
+## PHP Standards
+
+- PHP 8.3: typed properties, constructor property promotion, `declare(strict_types=1)` in every file
+- `final` on service and form classes unless inheritance is required
+- PHP Attributes for plugins: `#[Block(...)]`, `#[Action(...)]` — never `@Block` docblock annotations
+- Dependency injection always; never `\Drupal::service()` inside a class
+- Exception: static Batch API callbacks may use `\Drupal::service()` — document the reason
+
+## Drupal Patterns
+
+- Config schema required for every custom config key (`config/schema/localgov_bus_data.schema.yml`)
+- API keys stored in Key module entities (`drupal/key`), never in plain config
+- Cache metadata on all render arrays: `#cache` with appropriate tags, contexts, max-age
+- XSS: use `#plain_text` or `Xss::filterAdmin()` for user content; never raw `#markup`
+- SQL: parameterized queries only; never concatenate user input
+
+## AJAX Form Rule
+
+Service properties injected into form classes must be `protected` (not `private`/`readonly`).
+`DependencySerializationTrait::__sleep()` runs in `FormBase` scope and uses `get_object_vars()`,
+which cannot see `private` child-class properties. Do not override `__sleep()`.
+
+AJAX callbacks must build their response element directly on `$form` before returning it.
+Do not use `$form_state->setRebuild(TRUE)` inside a callback to add result elements —
+the rebuild happens after the callback returns.
+
+## Drush Commands
+
+- Register commands in `drush.services.yml` (Drush reads this, NOT `services.yml`).
+- Also register in `services.yml` (without `drush.command` tag) so the class is available as
+  a Drupal service for cron hooks and Batch API callbacks.
+- Mark the `services.yml` entry `lazy: true` — it is a CLI-only service.
+
+## BODS API Notes
+
+- Base URL: `https://data.bus-data.dft.gov.uk/api/v1`
+- Auth: `?api_key=<value>` query param (key from Key module entity)
+- Repeated query params (e.g. `adminArea=080&adminArea=081`): build manually with
+  `http_build_query` + string concat. Guzzle mangles PHP arrays into `adminArea[0]=` format.
+- Cumberland NaPTAN admin area codes: `080` (Copeland), `081` (Allerdale), `082` (Carlisle)
+- Cumberland bounding box: N:55.10 S:54.15 E:-2.45 W:-3.75
+
+## GTFS Filter
+
+`GtfsFilter` service trims downloads to the configured bounding box.
+Trip IDs are the pivot — all stop_times and stops for qualifying trips are kept,
+including out-of-box stops on cross-boundary routes (e.g. Carlisle→Gretna).
+Processing is line-by-line (`fgetcsv`/`fputcsv`); never load full GTFS files into memory.
+
+## Phase Status
+
+- Phase 1 (Foundation): complete
+- Phase 2 (Data import): complete — five content entities, Drush import command, cron, import log
+- Phases 3–6: see SPEC.md
+
+## Prefer Contrib
+
+Before writing custom code, check drupal.org for an existing contrib module.

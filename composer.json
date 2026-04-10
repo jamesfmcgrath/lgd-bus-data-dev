@@ -16,8 +16,11 @@
         "drupal/core-composer-scaffold": "^10.3",
         "drupal/core-recommended": "^10.3",
         "drupal/key": "^1.22",
+        "drupal/leaflet": "^10.4",
         "drupal/localgov": "^3.0",
         "drupal/localgov_search_solr": "^1.1",
+        "drupal/migrate_plus": "^6.0",
+        "drupal/migrate_source_csv": "^3.8",
         "wikimedia/composer-merge-plugin": "^2.1"
     },
     "require-dev": {
