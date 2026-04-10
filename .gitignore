@@ -85,7 +85,7 @@
 **/.DS_Store
 
 # AI agent tools — tracked files are canonical dev-environment config
-# Install agent resources once via: agr add madsnorgaard/drupal-expert ddev-expert drupal-reviewer
+# Install agent resources once via agr (see README / CLAUDE.md for full commands)
 /drupal-agent-resources/
 .cursor/
 .claire/

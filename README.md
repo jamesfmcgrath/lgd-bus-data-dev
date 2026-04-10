@@ -7,7 +7,7 @@ This repo provides a preconfigured [LocalGov Drupal](https://localgovdrupal.org)
 ## Requirements
 
 - [DDEV](https://ddev.com) — local dev environment
-- [uv](https://docs.astral.sh/uv/) + [agent-resources](https://github.com/KasperJuunge/agent-resources) — Claude Code agent resources (optional but recommended)
+- [uv](https://docs.astral.sh/uv/) + [agr](https://github.com/kasperjunge/agent-resources) — Claude Code agent resources (optional but recommended)
 
 ## Quick start
 
@@ -81,11 +81,15 @@ Makefile                 # Dev workflow shortcuts
 Install the three agent resources once after cloning:
 
 ```bash
-uv tool install agent-resources
-agr add madsnorgaard/drupal-expert
-agr add madsnorgaard/ddev-expert
-agr add madsnorgaard/drupal-reviewer
+uv tool install agr
+agr add madsnorgaard/drupal-agent-resources/drupal-expert --overwrite
+agr add madsnorgaard/drupal-agent-resources/ddev-expert --overwrite
+agr add madsnorgaard/drupal-agent-resources/drupal-reviewer --overwrite
 ```
+
+Run these from the repo root if you want skills under `.claude/` in this project (agr uses the current directory). Use `--overwrite` when updating or if agr reports a resource already exists.
+
+`agr` may print a “Skill … not found” line before successfully adding **drupal-reviewer**; that resource is an agent (`.claude/agents/`), not a skill, and the final “Added agent” line means it worked.
 
 Copy and edit the Claude Code permissions file:
 

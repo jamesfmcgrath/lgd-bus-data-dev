@@ -66,8 +66,10 @@ Use when troubleshooting DDEV container issues, config, or service problems. Tri
 To install (one-time setup):
 
 ```bash
-uv tool install agent-resources
-agr add madsnorgaard/drupal-expert
-agr add madsnorgaard/ddev-expert
-agr add madsnorgaard/drupal-reviewer
+uv tool install agr
+agr add madsnorgaard/drupal-agent-resources/drupal-expert --overwrite
+agr add madsnorgaard/drupal-agent-resources/ddev-expert --overwrite
+agr add madsnorgaard/drupal-agent-resources/drupal-reviewer --overwrite
 ```
+
+Use `--overwrite` if a skill or agent is already present. Ignore a preceding “Skill … not found” for `drupal-reviewer` if agr then reports the agent was added.

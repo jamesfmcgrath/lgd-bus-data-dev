@@ -39,15 +39,18 @@ fi
 info "Installing Claude Code agent resources..."
 
 if command -v agr &>/dev/null; then
-  agr add madsnorgaard/drupal-expert
-  agr add madsnorgaard/ddev-expert
-  agr add madsnorgaard/drupal-reviewer
+  # --overwrite: safe to re-run setup; agr errors if a skill dir already exists
+  agr add madsnorgaard/drupal-agent-resources/drupal-expert --overwrite
+  agr add madsnorgaard/drupal-agent-resources/ddev-expert --overwrite
+  agr add madsnorgaard/drupal-agent-resources/drupal-reviewer --overwrite
   success "Agent resources installed."
 else
   warn "agr not found — skipping agent resource install."
   warn "To install later:"
-  warn "  uv tool install agent-resources"
-  warn "  agr add madsnorgaard/drupal-expert ddev-expert drupal-reviewer"
+  warn "  uv tool install agr"
+  warn "  agr add madsnorgaard/drupal-agent-resources/drupal-expert --overwrite"
+  warn "  agr add madsnorgaard/drupal-agent-resources/ddev-expert --overwrite"
+  warn "  agr add madsnorgaard/drupal-agent-resources/drupal-reviewer --overwrite"
 fi
 
 # ── Claude settings.local.json ───────────────────────────────────────────────
