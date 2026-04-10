@@ -78,18 +78,18 @@ Makefile                 # Dev workflow shortcuts
 
 ## AI agent setup (Claude Code)
 
-Install the three agent resources once after cloning:
+Install skills and the code-review agent once after cloning (from the repo root so paths land under `.claude/` here):
 
 ```bash
 uv tool install agr
 agr add madsnorgaard/drupal-agent-resources/drupal-expert --overwrite
 agr add madsnorgaard/drupal-agent-resources/ddev-expert --overwrite
-agr add madsnorgaard/drupal-agent-resources/drupal-reviewer --overwrite
+mkdir -p .claude/agents
+curl -fsSL -o .claude/agents/drupal-reviewer.md \
+  https://raw.githubusercontent.com/madsnorgaard/drupal-agent-resources/main/.claude/agents/drupal-reviewer.md
 ```
 
-Run these from the repo root if you want skills under `.claude/` in this project (agr uses the current directory). Use `--overwrite` when updating or if agr reports a resource already exists.
-
-`agr` may print a “Skill … not found” line before successfully adding **drupal-reviewer**; that resource is an agent (`.claude/agents/`), not a skill, and the final “Added agent” line means it worked.
+[`agr`](https://github.com/kasperjunge/agent-resources) current releases only install **skills** (and may mirror them under `.cursor/skills/`). **drupal-reviewer** is a Claude Code **agent** (`.claude/agents/*.md`), so it is fetched with `curl` as above. `./scripts/setup.sh` does the same.
 
 Copy and edit the Claude Code permissions file:
 

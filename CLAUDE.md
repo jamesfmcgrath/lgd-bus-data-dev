@@ -69,7 +69,9 @@ To install (one-time setup):
 uv tool install agr
 agr add madsnorgaard/drupal-agent-resources/drupal-expert --overwrite
 agr add madsnorgaard/drupal-agent-resources/ddev-expert --overwrite
-agr add madsnorgaard/drupal-agent-resources/drupal-reviewer --overwrite
+mkdir -p .claude/agents
+curl -fsSL -o .claude/agents/drupal-reviewer.md \
+  https://raw.githubusercontent.com/madsnorgaard/drupal-agent-resources/main/.claude/agents/drupal-reviewer.md
 ```
 
-Use `--overwrite` if a skill or agent is already present. Ignore a preceding “Skill … not found” for `drupal-reviewer` if agr then reports the agent was added.
+Current `agr` only manages skills; **drupal-reviewer** is installed as a Claude Code agent file under `.claude/agents/`. Use `--overwrite` on `agr add` when refreshing skills.

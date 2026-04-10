@@ -11,6 +11,7 @@ RESET="\033[0m"
 
 MODULE_REPO="git@git.drupal.org:project/localgov_bus_data.git"
 MODULE_PATH="web/modules/custom/localgov_bus_data"
+DRUPAL_AGENT_RESOURCES_AGENT_URL="https://raw.githubusercontent.com/madsnorgaard/drupal-agent-resources/main/.claude/agents/drupal-reviewer.md"
 
 info()    { echo -e "${BOLD}▶ $*${RESET}"; }
 success() { echo -e "${GREEN}✔ $*${RESET}"; }
@@ -42,15 +43,29 @@ if command -v agr &>/dev/null; then
   # --overwrite: safe to re-run setup; agr errors if a skill dir already exists
   agr add madsnorgaard/drupal-agent-resources/drupal-expert --overwrite
   agr add madsnorgaard/drupal-agent-resources/ddev-expert --overwrite
-  agr add madsnorgaard/drupal-agent-resources/drupal-reviewer --overwrite
-  success "Agent resources installed."
+  success "Skills installed (drupal-expert, ddev-expert)."
 else
-  warn "agr not found — skipping agent resource install."
-  warn "To install later:"
-  warn "  uv tool install agr"
+  warn "agr not found — skipping skill install (drupal-expert, ddev-expert)."
+  warn "To install later: uv tool install agr"
   warn "  agr add madsnorgaard/drupal-agent-resources/drupal-expert --overwrite"
   warn "  agr add madsnorgaard/drupal-agent-resources/ddev-expert --overwrite"
-  warn "  agr add madsnorgaard/drupal-agent-resources/drupal-reviewer --overwrite"
+fi
+
+# Current agr only manages skills; drupal-reviewer is a Claude Code agent (.md under .claude/agents/).
+info "Installing drupal-reviewer agent..."
+mkdir -p .claude/agents
+if command -v curl &>/dev/null; then
+  if curl -fsSL -o .claude/agents/drupal-reviewer.md "${DRUPAL_AGENT_RESOURCES_AGENT_URL}"; then
+    success "drupal-reviewer agent installed to .claude/agents/drupal-reviewer.md"
+  else
+    warn "Could not download drupal-reviewer agent. Install manually:"
+    warn "  curl -fsSL -o .claude/agents/drupal-reviewer.md \\"
+    warn "    ${DRUPAL_AGENT_RESOURCES_AGENT_URL}"
+  fi
+else
+  warn "curl not found — cannot download drupal-reviewer agent."
+  warn "Save manually to .claude/agents/drupal-reviewer.md from:"
+  warn "  ${DRUPAL_AGENT_RESOURCES_AGENT_URL}"
 fi
 
 # ── Claude settings.local.json ───────────────────────────────────────────────
