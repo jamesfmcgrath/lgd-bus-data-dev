@@ -33,8 +33,11 @@ logs: ## Tail web server logs
 ## ── Drupal ───────────────────────────────────────────────────────────────────
 
 si: ## Fresh Drupal install (LocalGov profile)
-	ddev drush si localgov --existing-config -y
+	ddev drush si localgov -y
 	ddev drush cr
+
+install: ## Clean install, choose a profile (interactive: Standard/LocalGov/Microsites/...)
+	./scripts/install-drupal
 
 enable: ## Enable the localgov_bus_data module
 	ddev drush en localgov_bus_data -y

@@ -1,0 +1,70 @@
+#!/bin/bash
+
+set -euo pipefail
+
+# Enable trace if requested: TRACE=1 install-drupal
+if [[ "${TRACE:-0}" == "1" ]]; then
+  set -x
+fi
+
+echo "What profile do you want to install?"
+options=("Standard" "Umami" "LocalGov" "LocalGov (with Demo Content)" "LocalGov Microsites" "LocalGov (with Elections)")
+
+# Check if a command-line argument was provided
+if [ $# -gt 0 ]; then
+  # Use the command-line argument as the profile selection
+  profile_selection=$1
+else
+  # No argument provided, fall back to interactive selection
+  select profile_selection in "${options[@]}"
+  do
+    break
+  done
+fi
+
+case $profile_selection in
+  "Standard" | "st" | 1)
+    ddev drush si standard -y
+    ;;
+  "Umami" | "umami" | 2)
+    ddev drush si demo_umami -y
+    ;;
+  "LocalGov" | "localgov" | "lgd" | 3)
+    ddev drush si localgov -y
+    ;;
+  "LocalGov (with Demo Content)" | "lgddc" | 4)
+    ddev drush si localgov -y
+    ddev drush en localgov_demo -y
+    ;;
+  "LocalGov Microsites" | "lgdms" | 5)
+    ddev drush si localgov_microsites -y
+    ;;
+  "LocalGov (with Elections)" |"lgde" | 6)
+    ddev drush si localgov -y
+    ddev drush en localgov_elections_demo_content -y
+    ;;
+  *)
+    echo "Invalid option. Please run the script again with a valid option."
+    exit 1
+    ;;
+esac
+
+ddev drush cex -y
+ddev drush cr
+
+# If this project is in a git repo, commit the exported config.
+# Skip when not in a repo (common for fresh throwaway installs).
+if command -v git >/dev/null 2>&1 && git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  if [[ -d "config" ]]; then
+    # wait 3 seconds, so the config has fully exported
+    sleep 3
+    git add config
+    git commit -m "config" || true
+  else
+    echo "Note: No ./config directory found; skipping git commit."
+  fi
+else
+  echo "Note: Not a git repo; skipping git commit."
+fi
+
+ddev drush uli

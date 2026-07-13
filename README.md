@@ -29,8 +29,9 @@ ddev composer install
 # 2. Clone the module
 git clone git@git.drupal.org:project/localgov_bus_data.git web/modules/custom/localgov_bus_data
 
-# 3. Install Drupal
-ddev drush si localgov --existing-config -y
+# 3. Install Drupal (plain install; the localgov profile's hook_install()
+#    conflicts with --existing-config, and this repo tracks no site config)
+ddev drush si localgov -y
 
 # 4. Enable the module
 ddev drush en localgov_bus_data -y && ddev drush cr
@@ -56,7 +57,8 @@ make stan          # PHPStan static analysis
 make check         # Run all quality checks
 
 make cr            # Clear Drupal caches
-make si            # Fresh Drupal install
+make si            # Fresh Drupal install (LocalGov profile)
+make install       # Clean install, choose a profile (Standard/LocalGov/Microsites/...)
 make open          # Open site in browser
 ```
 
