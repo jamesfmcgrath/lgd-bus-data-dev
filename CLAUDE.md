@@ -52,7 +52,10 @@ When a form class (extending `FormBase` or `ConfigFormBase`) injects a service u
 
 ## Agent Resources
 
-This project uses three specialised agent resources. Use them proactively — do not wait to be asked.
+This project uses four specialised agent resources. Use them proactively, do not wait to be asked.
+
+### drupal-localgov
+Expert workflows for Drupal 10/11 and LocalGov Drupal: module development, theming, site building, config management, and operations. Use whenever a task touches Drupal, even if the word "Drupal" is not mentioned.
 
 ### drupal-expert
 Use for any Drupal implementation question, API lookup, hook usage, or architecture decision. Trigger it whenever you are about to write non-trivial Drupal code and are uncertain about the correct API, pattern, or contrib option.
@@ -69,6 +72,7 @@ To install (one-time setup):
 uv tool install agr
 agr add madsnorgaard/drupal-agent-resources/drupal-expert --overwrite
 agr add madsnorgaard/drupal-agent-resources/ddev-expert --overwrite
+agr add jamesfmcgrath/drupal-agent-resources/drupal-localgov --overwrite
 mkdir -p .claude/agents
 curl -fsSL -o .claude/agents/drupal-reviewer.md \
   https://raw.githubusercontent.com/madsnorgaard/drupal-agent-resources/main/.claude/agents/drupal-reviewer.md
