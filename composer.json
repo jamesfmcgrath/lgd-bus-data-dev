@@ -15,12 +15,16 @@
         "cweagans/composer-patches": "^1.6",
         "drupal/core-composer-scaffold": "^10.3",
         "drupal/core-recommended": "^10.3",
+        "drupal/geolocation": "^3.15",
         "drupal/key": "^1.22",
         "drupal/leaflet": "^10.4",
         "drupal/localgov": "^3.0",
+        "drupal/localgov_base": "^2.5",
+        "drupal/localgov_core": "^2.17",
         "drupal/localgov_search_solr": "^1.1",
         "drupal/migrate_plus": "^6.0",
         "drupal/migrate_source_csv": "^3.8",
+        "drupal/paragraphs": "^1.21",
         "wikimedia/composer-merge-plugin": "^2.1"
     },
     "require-dev": {
