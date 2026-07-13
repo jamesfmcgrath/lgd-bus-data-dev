@@ -84,6 +84,7 @@ Install skills and the code-review agent once after cloning (from the repo root 
 uv tool install agr
 agr add madsnorgaard/drupal-agent-resources/drupal-expert --overwrite
 agr add madsnorgaard/drupal-agent-resources/ddev-expert --overwrite
+agr add jamesfmcgrath/drupal-agent-resources/drupal-localgov --overwrite
 mkdir -p .claude/agents
 curl -fsSL -o .claude/agents/drupal-reviewer.md \
   https://raw.githubusercontent.com/madsnorgaard/drupal-agent-resources/main/.claude/agents/drupal-reviewer.md
