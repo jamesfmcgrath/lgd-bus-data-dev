@@ -40,31 +40,36 @@ fi
 info "Installing Claude Code agent resources..."
 
 if command -v agr &>/dev/null; then
-  # --overwrite: safe to re-run setup; agr errors if a skill dir already exists
-  agr add madsnorgaard/drupal-agent-resources/drupal-expert --overwrite
-  agr add madsnorgaard/drupal-agent-resources/ddev-expert --overwrite
-  success "Skills installed (drupal-expert, ddev-expert)."
+  # Prefer the lockfile so every clone gets identical, pinned skills.
+  if [ -f "agr.lock" ]; then
+    agr sync
+    success "Skills installed from agr.lock (agr sync)."
+  else
+    agr add madsnorgaard/drupal-agent-resources/drupal-expert --overwrite
+    agr add madsnorgaard/drupal-agent-resources/ddev-expert --overwrite
+    agr add jamesfmcgrath/drupal-agent-resources/drupal-localgov --overwrite
+    success "Skills installed (drupal-expert, ddev-expert, drupal-localgov)."
+  fi
 else
-  warn "agr not found — skipping skill install (drupal-expert, ddev-expert)."
-  warn "To install later: uv tool install agr"
-  warn "  agr add madsnorgaard/drupal-agent-resources/drupal-expert --overwrite"
-  warn "  agr add madsnorgaard/drupal-agent-resources/ddev-expert --overwrite"
+  warn "agr not found, skipping skill install."
+  warn "To install later: uv tool install agr && agr sync"
 fi
 
-# Current agr only manages skills; drupal-reviewer is a Claude Code agent (.md under .claude/agents/).
-info "Installing drupal-reviewer agent..."
+# drupal-reviewer is a Claude Code agent (.md under .claude/agents/). The tracked
+# copy is canonical; only fetch when missing so a local edit is never clobbered.
+info "Ensuring drupal-reviewer agent..."
 mkdir -p .claude/agents
-if command -v curl &>/dev/null; then
+if [ -f ".claude/agents/drupal-reviewer.md" ]; then
+  success "drupal-reviewer already present (tracked copy kept)."
+elif command -v curl &>/dev/null; then
   if curl -fsSL -o .claude/agents/drupal-reviewer.md "${DRUPAL_AGENT_RESOURCES_AGENT_URL}"; then
     success "drupal-reviewer agent installed to .claude/agents/drupal-reviewer.md"
   else
-    warn "Could not download drupal-reviewer agent. Install manually:"
-    warn "  curl -fsSL -o .claude/agents/drupal-reviewer.md \\"
-    warn "    ${DRUPAL_AGENT_RESOURCES_AGENT_URL}"
+    warn "Could not download drupal-reviewer agent. Install manually from:"
+    warn "  ${DRUPAL_AGENT_RESOURCES_AGENT_URL}"
   fi
 else
-  warn "curl not found — cannot download drupal-reviewer agent."
-  warn "Save manually to .claude/agents/drupal-reviewer.md from:"
+  warn "curl not found. Save drupal-reviewer manually from:"
   warn "  ${DRUPAL_AGENT_RESOURCES_AGENT_URL}"
 fi
 

@@ -2,8 +2,10 @@
   "permissions": {
     "allow": [
       "Read(<absolute-path-to-repo>/**)",
-      "Bash(./vendor/bin/phpcs -p web/modules/custom/localgov_bus_data/localgov_bus_data.module)",
-      "Bash(ls -la <absolute-path-to-repo>/web/modules/custom/localgov_bus_data/*.module)"
+      "Bash(./vendor/bin/phpcs -p web/modules/custom/localgov_bus_data)",
+      "Bash(./vendor/bin/phpcbf web/modules/custom/localgov_bus_data)",
+      "Bash(ddev drush *)",
+      "Bash(ls -la <absolute-path-to-repo>/web/modules/custom/localgov_bus_data/**)"
     ]
   }
 }
